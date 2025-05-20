@@ -1,7 +1,7 @@
 #pragma once
 #include <adresse.h>
 
-typedef struct Station
+typedef struct station
 {
     mac addr_mac;
     ipv4 addr_ip;

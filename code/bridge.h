@@ -1,7 +1,7 @@
 #pragma once
 #include <port.h>
 
-typedef struct Bridge{
+typedef struct bridge{
     mac addr_eth;
     size_t nb_ports;
     size_t priorite;
