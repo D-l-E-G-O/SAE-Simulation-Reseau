@@ -21,3 +21,13 @@ typedef struct matrice_adj
     poids** adjacence;
     sommet* sommets;
 }adj;
+
+void init_matrice();
+void init_sommet();
+
+
+char* to_string_matrice(const matrice_adj* matrice);
+char* to_string_sommet(const sommet* sommet);
+
+void afficher_matrice();
+void afficher_sommet();

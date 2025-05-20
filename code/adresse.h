@@ -5,10 +5,17 @@ typedef uint8_t mac[6];
 
 typedef uint32_t ipv4;
 
-bool compare_mac(const mac mac1,const mac mac2);
-void to_string_mac(const mac mac,char * buffer);
+void init_mac();
+void init_ipv4();
 
-bool compare_ipv4(const ipv4 ip1,const ipv4 ip2);
-bool to_string_ipv4(const ipv4 ip,char * buffer);
+bool compare_mac(mac const * mac1, mac const* mac2);
+char* to_string_mac(mac const * mac,char * buffer);
+
+bool compare_ipv4( ipv4 const* ip1, ipv4 const* ip2);
+char* to_string_ipv4(ipv4 const * ip,char * buffer);
+
+
+void afficher_mac( mac const* mac);
+void afficher_ip(ipv4 const  *ip);
 
 
