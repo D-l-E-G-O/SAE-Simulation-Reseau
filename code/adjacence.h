@@ -3,7 +3,7 @@
 typedef size_t poids;
 
 typedef enum{
-    MACHINE = 1,
+    STATION = 1,
     SWITCH = 2,
 }type;
 
@@ -26,7 +26,7 @@ void init_matrice();
 void init_sommet();
 
 
-char* to_string_matrice(const matrice_adj* matrice);
+char* to_string_matrice(const adj* matrice);
 char* to_string_sommet(const sommet* sommet);
 
 void afficher_matrice();

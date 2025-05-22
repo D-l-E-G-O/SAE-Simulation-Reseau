@@ -5,7 +5,7 @@ typedef struct station
 {
     mac addr_mac;
     ipv4 addr_ip;
-};
+}station;
 
 void to_string_station(station* st);
 
