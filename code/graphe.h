@@ -28,9 +28,9 @@ typedef struct graphe
 }graphe;
 
 void init_graphe(graphe *m,int nbSommet);
-void init_sommet();
+void init_sommet(sommet * s, int index,void * machine,type type);
 void desinit_graphe(graphe *m, int nbSommet);
-void desinit_sommet();
+void desinit_sommet(sommet *s);
 
 
 void add_vertex(graphe *m,sommet a , sommet b,int poids );

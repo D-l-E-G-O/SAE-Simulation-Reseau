@@ -62,4 +62,35 @@ void afficher_ipv4(ipv4 const *ip){
     printf("IPV4: %s\n", to_string_ipv4(ip, buffer));
 };
 
+mac string_to_mac(char* string) {
+    if (string == NULL) {
+        return 0;
+    }
+    
+    unsigned int o1, o2, o3, o4, o5, o6;
+    if (sscanf(string, "%02x:%02x:%02x:%02x:%02x:%02x", 
+               &o1, &o2, &o3, &o4, &o5, &o6) != 6) {
+        return 0; //EROROROROROROROROROR
+    }
+    
+    return ((mac)o1 << 40) | ((mac)o2 << 32) | ((mac)o3 << 24) | 
+           ((mac)o4 << 16) | ((mac)o5 << 8) | (mac)o6;
+};
 
+
+ipv4 string_to_ipv4(char* string) {
+    if (string == NULL) {
+        return 0;
+    }
+    
+    unsigned int o1, o2, o3, o4;
+    if (sscanf(string, "%u.%u.%u.%u", &o1, &o2, &o3, &o4) != 4) {
+        return 0; //EOROROROROROROROR;
+    }
+    
+    if (o1 > 255 || o2 > 255 || o3 > 255 || o4 > 255) {
+        return 0;//EOROROROROROROROR
+    }
+    
+    return (o1 << 24) | (o2 << 16) | (o3 << 8) | o4;
+}

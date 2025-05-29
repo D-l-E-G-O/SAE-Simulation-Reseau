@@ -47,7 +47,7 @@ void parse_file(graphe *g, char* ligne[]) {
     int nb_connexion = 0;
     sscanf(ligne[0], "%d %d", &nb_machine, &nb_connexion);
     printf("nb machine : %d nb connexion : %d\n", nb_machine, nb_connexion);
-
+    init_graphe(g,nb_machine);
     for(int i = 1; i <= nb_machine; i++) {
         int type;
         char buffer[MAX_LIGNE_SIZE];

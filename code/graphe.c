@@ -29,7 +29,10 @@ void init_sommet(sommet *s , int index,void * machine,type type){
     s->index = index;
     s->type = type;
     s->machine = machine;
-};                                                             
+};
+
+
+
               
                                                                                 
 void desinit_graphe(graphe *g, int nbSommet){                                     
@@ -44,14 +47,14 @@ void desinit_graphe(graphe *g, int nbSommet){
     g->sommets =NULL;      
     g = NULL;                                                     
 }                                                                               
-                                                                                
-                                                                                
-                                                                                
-                                                                                
-size_t index_sommet(graphe const *m, sommet s){                                    
-                                                                                
-};                                                                              
-                                                                                
+       
+
+void desinit_sommet(sommet *s){
+    s->index =-1;
+    s->type = -1;
+    s->machine = NULL;
+};
+                                                                                                                                                            
                                                                                 
 void add_vertex(graphe *g,sommet a , sommet b , int poids ){                                   
     g->matrice[a.index][b.index] = poids ;                                       

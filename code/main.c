@@ -30,7 +30,7 @@ int main(int argc, char const *argv[])
 
 
     printf("Test IPV4\n");
-    ipv4 ip = build_ipv4(128,64,11,2);
+    ipv4 ip = string_to_ipv4("130.79.80.8");
     afficher_ipv4(&ip);
     return 0;
 }
