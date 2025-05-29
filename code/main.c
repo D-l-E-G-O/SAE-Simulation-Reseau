@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "parser.h"
 #include <stdlib.h>
+#include "adress.h"
+
 int main(int argc, char const *argv[])
 {
     int MAX_LIGNES = 1024;    
@@ -13,5 +15,8 @@ int main(int argc, char const *argv[])
     graph g;
     parse_file(&g , lignes);
 
+    printf("Test IPV4\n");
+    ipv4 ip = build_ipv4(128,64,11,2);
+    afficher_ipv4(&ip);
     return 0;
 }
