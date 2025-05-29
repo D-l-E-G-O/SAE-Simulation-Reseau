@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "parser.h"
 #include <stdlib.h>
+#include "adress.h"
+
 #include "graphe.h"
 int main(int argc, char const *argv[])
 {
@@ -27,5 +29,8 @@ int main(int argc, char const *argv[])
     
 
 
+    printf("Test IPV4\n");
+    ipv4 ip = build_ipv4(128,64,11,2);
+    afficher_ipv4(&ip);
     return 0;
 }
