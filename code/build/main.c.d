@@ -1,4 +1,3 @@
-build/./main.c.o: main.c parser.h graph.h adjacence.h
+build/./main.c.o: main.c parser.h graphe.h
 parser.h:
-graph.h:
-adjacence.h:
+graphe.h:

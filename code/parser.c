@@ -38,11 +38,11 @@ int read_file(FILE* file, char* lignes[]) {
 
 
                                                                                 
-int close_file(FILE * file){                                                    
+int close_file(FILE * file){    
     fclose(file);                                                               
 };                                                                              
                                                                                 
-void parse_file(graph *g, char* ligne[]) {
+void parse_file(graphe *g, char* ligne[]) {
     int nb_machine = 0;
     int nb_connexion = 0;
     sscanf(ligne[0], "%d %d", &nb_machine, &nb_connexion);
