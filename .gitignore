@@ -1,7 +1,6 @@
 .vscode
 *.o
 *.d
-*.o
 *.d
-./bin/code
-./build/*
+bin/code
+build/*
