@@ -25,9 +25,8 @@ void init_graphe(graphe *g, int nbSommet) {
     }                                                                           
 }     
 
-void init_sommet(sommet *s , int index,void * machine,type type){
+void init_sommet(sommet *s , int index,machine * machine){
     s->index = index;
-    s->type = type;
     s->machine = machine;
 };
 
@@ -35,9 +34,9 @@ void init_sommet(sommet *s , int index,void * machine,type type){
 
               
                                                                                 
-void desinit_graphe(graphe *g, int nbSommet){                                     
+void desinit_graphe(graphe *g){                                     
                                                                                 
-    for (int i = 0; i < nbSommet; i++) {                                        
+    for (int i = 0; i < g->ordre; i++) {                                        
         free(g->matrice[i]);                                                  
         g->matrice[i] =NULL;                                                  
     }                                                                           
@@ -51,7 +50,6 @@ void desinit_graphe(graphe *g, int nbSommet){
 
 void desinit_sommet(sommet *s){
     s->index =-1;
-    s->type = -1;
     s->machine = NULL;
 };
                                                                                                                                                             

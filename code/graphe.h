@@ -1,22 +1,18 @@
 #pragma once
 #include <stddef.h>
+#include <machine.h>
 
 
 typedef size_t poids;
 
 #define NONE ((poids)0)
 
-typedef enum{
-    STATION = 1,
-    SWITCH = 2,
-}type;
 
 
 typedef struct sommet
 {
     int index;
-    void* machine;
-    type type;
+    machine* machine;
 }sommet;
 
 
@@ -28,8 +24,8 @@ typedef struct graphe
 }graphe;
 
 void init_graphe(graphe *m,int nbSommet);
-void init_sommet(sommet * s, int index,void * machine,type type);
-void desinit_graphe(graphe *m, int nbSommet);
+void init_sommet(sommet * s, int index,machine * machine);
+void desinit_graphe(graphe *g);
 void desinit_sommet(sommet *s);
 
 

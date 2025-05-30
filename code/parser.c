@@ -2,6 +2,10 @@
 #include "parser.h"                                                             
 #include <string.h>                                                             
 #include <stdlib.h>  
+
+#include <station.h>
+#include <bridge.h>
+#include <interface.h>
                                                                                 
 int MAX_LIGNE_SIZE = 1024;                                                           
 int MAX_LIGNE = 1024;                                                          
@@ -34,13 +38,20 @@ int read_file(FILE* file, char* lignes[]) {
 
 
 
+int close_file(FILE* file, char* lignes[], int nb_lignes) {
+    if (file != NULL) {
+        fclose(file);
+    }
+    
+    if (lignes != NULL) {
+        for (int i = 0; i < nb_lignes; i++) {
+            free(lignes[i]); 
 
-
-
-                                                                                
-int close_file(FILE * file){    
-    fclose(file);                                                               
-};                                                                              
+        }
+    }
+    
+    return 0;
+}                                                                    
                                                                                 
 void parse_file(graphe *g, char* ligne[]) {
     int nb_machine = 0;
@@ -58,21 +69,35 @@ void parse_file(graphe *g, char* ligne[]) {
             char ipAddr[16];  
             sscanf(buffer, "%[^;];%15s", macAddr, ipAddr);
             printf("Station: MAC=%s, IP=%s\n", macAddr, ipAddr);
+            station* sta = malloc(sizeof(station)) ;
+            mac mac = string_to_mac(macAddr);
+            ipv4 ip = string_to_ipv4(ipAddr);
+            init_station(sta,mac,ip);
+            interface* inter = malloc(sizeof(interface));
+            add_interface_station(sta,inter);
         }
         else if(type == SWITCH) {
             char macAddr[18];
             int nb_port, priorite;
             sscanf(buffer, "%[^;];%d;%d", macAddr, &nb_port, &priorite);
             printf("Switch: MAC=%s, Ports=%d, Priorite=%d\n", macAddr, nb_port, priorite);
+            bridge  * bridge = malloc(sizeof(bridge));
+            mac mac = string_to_mac(macAddr);
+            init_bridge(bridge,mac,nb_port,priorite);
+            interface* inter = malloc(sizeof(interface));
+            add_interface_bridge(bridge,inter);
         }
     }
 
     for(int i = nb_machine + 1; i <= nb_machine + nb_connexion; i++) {
-        int type, machine1, machine2;
-        sscanf(ligne[i], "%d;%d;%d", &type, &machine1, &machine2);
-        printf("Connexion entre %d et %d\n", machine1, machine2);
+        int type, indexmachine1, indexmachine2;
+        sscanf(ligne[i], "%d;%d;%d", &type, &indexmachine1, &indexmachine2);
+        printf("Connexion entre %d et %d\n", indexmachine1, indexmachine2);
+        machine * machine1 = g->sommets[indexmachine1].machine;
+        machine * machine2 = g->sommets[indexmachine2].machine;
+        connect_two_machine(machine1,machine2);
     }
-}                                                            
+}                                                           
                                                                                 
                                                                                 
 
