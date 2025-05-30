@@ -63,38 +63,44 @@ void parse_file(graphe *g, char* ligne[]) {
         int type;
         char buffer[MAX_LIGNE_SIZE];
         sscanf(ligne[i], "%d;%[^\n]", &type, buffer);
-
+        machine * mach = malloc(sizeof(machine));
+        interface* inter = malloc(sizeof(interface));
+        
         if(type == STATION) {
             char macAddr[18];  
             char ipAddr[16];  
             sscanf(buffer, "%[^;];%15s", macAddr, ipAddr);
-            printf("Station: MAC=%s, IP=%s\n", macAddr, ipAddr);
             station* sta = malloc(sizeof(station)) ;
             mac mac = string_to_mac(macAddr);
             ipv4 ip = string_to_ipv4(ipAddr);
-            init_station(sta,mac,ip);
-            interface* inter = malloc(sizeof(interface));
-            add_interface_station(sta,inter);
+            init_station(sta,ip);
+            init_machine(mach,(void*)sta,STATION,mac);
         }
         else if(type == SWITCH) {
             char macAddr[18];
             int nb_port, priorite;
             sscanf(buffer, "%[^;];%d;%d", macAddr, &nb_port, &priorite);
-            printf("Switch: MAC=%s, Ports=%d, Priorite=%d\n", macAddr, nb_port, priorite);
-            bridge  * bridge = malloc(sizeof(bridge));
+            bridge  * bd = malloc(sizeof(bridge));
             mac mac = string_to_mac(macAddr);
-            init_bridge(bridge,mac,nb_port,priorite);
-            interface* inter = malloc(sizeof(interface));
-            add_interface_bridge(bridge,inter);
+            init_bridge(bd,nb_port,priorite);
+            init_machine(mach,(void*)bd,SWITCH,mac);
         }
+
+        //init_interface(inter,mach);
+        //add_interface(mach,inter);
+        
+
+        sommet * som = malloc(sizeof(sommet));
+        init_sommet(som,i-1,mach);
+        add_sommet(g,som,i-1);
     }
 
     for(int i = nb_machine + 1; i <= nb_machine + nb_connexion; i++) {
         int type, indexmachine1, indexmachine2;
         sscanf(ligne[i], "%d;%d;%d", &type, &indexmachine1, &indexmachine2);
         printf("Connexion entre %d et %d\n", indexmachine1, indexmachine2);
-        machine * machine1 = g->sommets[indexmachine1].machine;
-        machine * machine2 = g->sommets[indexmachine2].machine;
+        machine * machine1 = g->sommets[indexmachine1]->machine;
+        machine * machine2 = g->sommets[indexmachine2]->machine;
         connect_two_machine(machine1,machine2);
     }
 }                                                           

@@ -7,7 +7,7 @@
                                                                                 
 void init_graphe(graphe *g, int nbSommet) {                                       
     g->matrice = (poids**)malloc(nbSommet * sizeof(poids*));                  
-    g->sommets = (sommet*)malloc(nbSommet * sizeof(sommet));                    
+    g->sommets = (sommet**)malloc(nbSommet * sizeof(sommet*));                    
     g->ordre = nbSommet;                                                       
     if (g->matrice == NULL || g->sommets == NULL) {                           
         printf("Error malloc");                                                 
@@ -31,6 +31,10 @@ void init_sommet(sommet *s , int index,machine * machine){
 };
 
 
+void add_sommet(graphe* g,sommet* sommet,int index){
+    g->sommets[index] = sommet;
+};
+
 
               
                                                                                 
@@ -38,8 +42,12 @@ void desinit_graphe(graphe *g){
                                                                                 
     for (int i = 0; i < g->ordre; i++) {                                        
         free(g->matrice[i]);                                                  
-        g->matrice[i] =NULL;                                                  
-    }                                                                           
+        g->matrice[i] =NULL; 
+        desinit_sommet(g->sommets[i]);  
+        free(g->sommets[i]);
+        g->matrice[i] =NULL;                                               
+    }                       
+                                                        
     free(g->matrice);                                                         
     free(g->sommets);                                                           
     g->matrice = NULL;                                                        
@@ -50,6 +58,8 @@ void desinit_graphe(graphe *g){
 
 void desinit_sommet(sommet *s){
     s->index =-1;
+    desinit_machine(s->machine);
+    free(s->machine);
     s->machine = NULL;
 };
                                                                                                                                                             

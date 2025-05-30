@@ -1,5 +1,9 @@
 #pragma once
 #include <trame.h>
+#include <machine.h>
+
+typedef struct machine machine;
+
 
 typedef struct interface
 {
@@ -10,7 +14,7 @@ typedef struct interface
 
 
 
-void init_interface(interface * inter,void* machine);
+void init_interface(interface * inter,machine* machine);
 
 void connect_two_interface(interface* a, interface* b);
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <stddef.h>
+#include <stdlib.h> 
 #include <machine.h>
 
 
@@ -19,7 +20,7 @@ typedef struct sommet
 typedef struct graphe
 {
     poids** matrice;
-    sommet* sommets;
+    sommet** sommets;
     int ordre;
 }graphe;
 
@@ -30,7 +31,7 @@ void desinit_sommet(sommet *s);
 
 
 void add_vertex(graphe *m,sommet a , sommet b,int poids );
-
+void add_sommet(graphe *g,sommet *s,int index);
 char* to_string_sommet(const sommet* sommet,char * buffer);
 char* to_string_graphe(const graphe* matrice,char* buffer);
 

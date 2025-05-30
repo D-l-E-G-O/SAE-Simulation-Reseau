@@ -9,21 +9,18 @@ bool compare_mac(mac const* mac1, mac const* mac2){
     return (*mac1&*mac2) == *mac1;
 };
 
-char* to_string_mac(mac const* mac, char * buffer){
-    for(size_t i=12; i>0; i--){
-        size_t nb_bits = (i-1)*5;
-        uint16_t masque = 15 << nb_bits;
-        uint8_t x = (*mac&masque) >> nb_bits;
-        char* buff_temp = buffer;
-        if (i==12){
-            sprintf(buffer, "%u", x);
+char* to_string_mac(mac const* mac, char * buffer) {
+    buffer[0] = '\0'; 
+    for(size_t i = 6; i > 0; i--) {
+        size_t byte_index = i - 1;
+        uint8_t byte = ((uint8_t*)mac)[byte_index];
+        if (i < 6) {
+            sprintf(buffer + strlen(buffer), ":");
         }
-        else{
-            sprintf(buff_temp + strlen(buffer), ".%u", x);
-        }
+        sprintf(buffer + strlen(buffer), "%02X", byte);
     }
     return buffer;
-};
+}
 
 void afficher_mac(mac const* mac){
     char buffer[18];

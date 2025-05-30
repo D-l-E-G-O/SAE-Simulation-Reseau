@@ -1,9 +1,8 @@
 #include <interface.h>
 
 
-void init_interface(interface * inter,void* machine,type type){
+void init_interface(interface * inter,machine* machine){
     inter->machine = machine;
-    inter->type = type;
 };
 
 void connect_two_interface(interface* a, interface* b){//c'est comme si on connecter les deux interfaces avec un câble
