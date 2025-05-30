@@ -64,7 +64,6 @@ void parse_file(graphe *g, char* ligne[]) {
         char buffer[MAX_LIGNE_SIZE];
         sscanf(ligne[i], "%d;%[^\n]", &type, buffer);
         machine * mach = malloc(sizeof(machine));
-        interface* inter = malloc(sizeof(interface));
         
         if(type == STATION) {
             char macAddr[18];  
@@ -86,22 +85,16 @@ void parse_file(graphe *g, char* ligne[]) {
             init_machine(mach,(void*)bd,SWITCH,mac);
         }
 
-        //init_interface(inter,mach);
-        //add_interface(mach,inter);
-        
-
         sommet * som = malloc(sizeof(sommet));
         init_sommet(som,i-1,mach);
         add_sommet(g,som,i-1);
     }
 
     for(int i = nb_machine + 1; i <= nb_machine + nb_connexion; i++) {
-        int type, indexmachine1, indexmachine2;
-        sscanf(ligne[i], "%d;%d;%d", &type, &indexmachine1, &indexmachine2);
-        printf("Connexion entre %d et %d\n", indexmachine1, indexmachine2);
-        machine * machine1 = g->sommets[indexmachine1]->machine;
-        machine * machine2 = g->sommets[indexmachine2]->machine;
-        connect_two_machine(machine1,machine2);
+        int poids, indexmachine1, indexmachine2;
+        sscanf(ligne[i], "%d;%d;%d", &poids, &indexmachine1, &indexmachine2);
+      
+        connect_two_machine(g->sommets[indexmachine1]->machine,g->sommets[indexmachine2]->machine);
     }
 }                                                           
                                                                                 

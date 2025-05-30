@@ -1,13 +1,22 @@
 #include <interface.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-
-void init_interface(interface * inter,machine* machine){
+void init_interface(interface* inter, machine* machine) {
+    if (!inter) return;
+    
     inter->machine = machine;
+    inter->connected_to = NULL; 
 };
+
+void desinit_inter(interface* inter){
+    inter->machine = NULL;
+}
 
 void connect_two_interface(interface* a, interface* b){//c'est comme si on connecter les deux interfaces avec un câble
     a->connected_to = b;
     b->connected_to = a;
+    printf("Connexion entre %ld et %ld\n", a->machine->add_mac, b->machine->add_mac);
 };
 
 void send_data(interface* sender,trame * data){//envoie les data via le "cable" qui est connecter à l'interface
@@ -15,4 +24,5 @@ void send_data(interface* sender,trame * data){//envoie les data via le "cable" 
 };
 
 void receive_data(interface *receiver,trame * data){
+    receive_tram(receiver->connected_to->machine,data,receiver->machine);
 }

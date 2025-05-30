@@ -9,7 +9,7 @@ typedef enum {
 typedef struct com
 {
     mac addr_mac;
-    port port;
+    size_t index_port;
 }com;
 
 

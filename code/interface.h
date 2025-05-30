@@ -15,6 +15,7 @@ typedef struct interface
 
 
 void init_interface(interface * inter,machine* machine);
+void desinit_inter(interface* inter);
 
 void connect_two_interface(interface* a, interface* b);
 
