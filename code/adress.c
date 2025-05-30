@@ -6,8 +6,9 @@
 
 
 bool compare_mac(mac const* mac1, mac const* mac2){
-    return (*mac1&*mac2) == *mac1;
-};
+    return *mac1 == *mac2;
+}
+
 
 char* to_string_mac(mac const* mac, char * buffer) {
     buffer[0] = '\0'; 
