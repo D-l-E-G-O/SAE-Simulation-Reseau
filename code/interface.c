@@ -16,13 +16,19 @@ void desinit_inter(interface* inter){
 void connect_two_interface(interface* a, interface* b){//c'est comme si on connecter les deux interfaces avec un câble
     a->connected_to = b;
     b->connected_to = a;
-    printf("Connexion entre %s et %s\n", to_string_mac(&a->machine->add_mac, (char[20]){0}),to_string_mac(&b->machine->add_mac, (char[20]){0}));
+    printf("Connexion: %s <-> %s\n",
+       to_string_mac(&a->machine->add_mac,  (char[20]){0}),
+       to_string_mac(&b->machine->add_mac,  (char[20]){0}));
 };
 
-void send_data(interface* sender,trame * data){//envoie les data via le "cable" qui est connecter à l'interface
-    receive_data(sender->connected_to,data);
-};
+void send_data(interface *intf, trame *tr) {//ça envoie dans le "câble"
+    if (intf->connected_to && intf->connected_to->machine) {
+        receive_tram(intf->connected_to->machine, tr, intf->connected_to);
+    }
+}
 
-void receive_data(interface *receiver,trame * data){
-    receive_tram(receiver->machine,data,receiver->machine);
+void receive_data(interface *receiver, trame *data) {
+    if (receiver->machine) {
+        receive_tram(receiver->machine, data, receiver);
+    }
 }
