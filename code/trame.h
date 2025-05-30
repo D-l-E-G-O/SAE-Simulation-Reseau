@@ -7,5 +7,5 @@ typedef struct trame{
     int message;
 }trame;
 
-void init_trame(trame * tra,mac source,mac dest);
+void init_trame(trame * tra,mac source,mac dest,int message);
 

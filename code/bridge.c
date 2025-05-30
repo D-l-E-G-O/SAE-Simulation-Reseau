@@ -51,7 +51,6 @@ int check_if_in_com_table(bridge* bd, mac addr) {
 
 void add_to_com_table(bridge* bd, mac addr, interface* inter) {
     if (!bd || !inter) return;
-
     if (check_if_in_com_table(bd, addr) != -1) return;
 
     if (bd->table_length == bd->max_table_length) {
@@ -92,4 +91,30 @@ interface* bridge_get_free_interface(bridge* bd, machine* mach) {
         }
     }
     return NULL; 
+}
+
+
+void print_switch_table(const bridge* bd) {
+    if (!bd || !bd->table) {
+        printf("Table de commutation vide ou bridge invalide.\n");
+        return;
+    }
+
+    printf("+-------------------------------------------+\n");
+    printf("|        Table de commutation du bridge     |\n");
+    printf("+---------------------+---------------------+\n");
+    printf("| Adresse MAC         | Port d'interface    |\n");
+    printf("+---------------------+---------------------+\n");
+
+    if (bd->table_length == 0) {
+        printf("|         Vide         |         -          |\n");
+    } else {
+        for (size_t i = 0; i < bd->table_length; i++) {
+            printf("|%s |",to_string_mac(&bd->table[i].addr_mac, (char[20]){0}));
+            printf("| %10zu         |\n", bd->table[i].index_port);
+        }
+    }
+
+    printf("+---------------------+---------------------+\n");
+    printf("Total entrées: %zu / %zu\n", bd->table_length, bd->max_table_length);
 }

@@ -1,6 +1,7 @@
 #include <machine.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 void init_machine(machine* machine, void* machine_pointer, type type, mac addr) {
     machine->machine = machine_pointer;
     machine->type = type;
@@ -21,7 +22,6 @@ void init_machine(machine* machine, void* machine_pointer, type type, mac addr) 
                to_string_ipv4(&sta->addr_ip, bufferIP));
         machine->interface = malloc(sizeof(interface));
         if (!machine->interface) {
-            fprintf(stderr, "Erreur d'allocation interface station\n");
             exit(EXIT_FAILURE);
         }
         init_interface(machine->interface, machine);
@@ -40,7 +40,6 @@ void desinit_machine(machine* machine) {
     
     machine->add_mac = -1;
     
-    // Désallocation spécifique aux stations
     if (machine->type == STATION && machine->interface) {
         desinit_inter(machine->interface);
         free(machine->interface);
@@ -50,16 +49,75 @@ void desinit_machine(machine* machine) {
     free(machine->machine);
 }
 
+void send_trame(machine* sender, trame *tr, interface* input_port) {
+    if (sender->type == STATION) {
+        send_data(sender->interface, tr);
+    } else if (sender->type == SWITCH) {
+        bridge *br = (bridge*)sender->machine;
+        int index = check_if_in_com_table(br, tr->dest);
+        
+        if (index != -1) {
+            com* entry = &br->table[index];
+            interface* out_inter = br->ports[entry->index_port];
+            send_data(out_inter, tr);
+        } else {
+            for (size_t i = 0; i < br->nb_ports; i++) {
+                if (br->ports[i] && br->ports[i] != input_port) {
+                    send_data(br->ports[i], tr);
+                }
+            }
+        }
+    }
+}
 
+bool is_it_for_me_question_mark(machine *mach,trame* t){
+    return(compare_mac(&mach->add_mac,&t->dest));
+}
 
-void send_trame(machine* sender,trame *tr){
-    send_data(sender->interface,tr);
-};
+void receive_tram(machine* receiver, trame* tr, machine* sender) {
+    char mac_buffer[20];
+    if (receiver->type == STATION) {
+        if (is_it_for_me_question_mark(receiver, tr)) {
+            printf("Station %s: reçu trame de %s: [dest=%s, message=%d]\n",
+                   to_string_mac(&receiver->add_mac, mac_buffer),
+                   to_string_mac(&tr->source, mac_buffer),
+                   to_string_mac(&tr->dest, mac_buffer),
+                   tr->message);
 
-void receive_tram(machine* receiver,trame*tr, machine* sender){
+            if (tr->message == 0) {
+                trame reply;
+                init_trame(&reply, receiver->add_mac, tr->source,1);
+                send_trame(receiver, &reply, NULL);
+            }
+        }
 
-};
+    } else if (receiver->type == SWITCH) {
+        bridge *br = (bridge*)receiver->machine;
+        printf("Switch %s: reçu trame de %s vers %s\n",
+               to_string_mac(&receiver->add_mac, mac_buffer),
+               to_string_mac(&tr->source, mac_buffer),
+               to_string_mac(&tr->dest, mac_buffer));
 
+        interface* input_port = NULL;
+        for (size_t i = 0; i < br->nb_ports; i++) {
+            if (br->ports[i] &&
+                br->ports[i]->connected_to &&
+                compare_mac(&br->ports[i]->connected_to->machine->add_mac, &tr->source)) {
+                input_port = br->ports[i];
+                break;
+            }
+        }
+
+        if (input_port) {
+            add_to_com_table(br, tr->source, input_port);
+        } else {
+            printf(" Port d'entrée non trouvé pour la trame entrante (MAC source = %s)\n",
+                   to_string_mac(&tr->source, mac_buffer));
+        }
+
+        send_trame(receiver, tr, input_port);
+    }
+}
 
 void connect_two_machine(machine* machine1, machine* machine2) {
     interface *intf1 = NULL, *intf2 = NULL;
@@ -79,9 +137,6 @@ void connect_two_machine(machine* machine1, machine* machine2) {
     }
 
     if (intf1 && intf2) {
-        printf("Connexion entre %ld et %ld\n", 
-               intf1->machine->add_mac, 
-               intf2->machine->add_mac);
         connect_two_interface(intf1, intf2);
     } else {
         fprintf(stderr, "Erreur: interface non disponible\n");

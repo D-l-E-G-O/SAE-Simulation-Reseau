@@ -23,3 +23,5 @@ void desinit_bridge(bridge* bd);
 void add_to_com_table(bridge* bd, mac addr, interface* inter);
 int check_if_in_com_table(bridge* bd, mac addr);
 interface* bridge_get_free_interface(bridge* bd,machine* mach);
+
+void print_switch_table(const bridge* bd);
