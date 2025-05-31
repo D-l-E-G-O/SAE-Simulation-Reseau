@@ -9,13 +9,11 @@ typedef size_t poids;
 #define NONE ((poids)0)
 
 
-
 typedef struct sommet
 {
     int index;
     machine* machine;
 }sommet;
-
 
 typedef struct graphe
 {

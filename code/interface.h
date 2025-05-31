@@ -7,8 +7,8 @@ typedef struct machine machine;
 
 typedef struct interface
 {
-    machine* machine;//pointeur vers la machinne qui à l'interface
-    struct interface* connected_to;//interface à qui cette interface est connecté
+    machine* machine; //Pointeur vers la machinne qui a l'interface
+    struct interface* connected_to; //Interface à qui cette interface est connectée
     
 }interface;
 

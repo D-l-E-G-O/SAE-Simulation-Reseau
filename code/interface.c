@@ -13,7 +13,7 @@ void desinit_inter(interface* inter){
     inter->machine = NULL;
 }
 
-void connect_two_interface(interface* a, interface* b){//c'est comme si on connecter les deux interfaces avec un câble
+void connect_two_interface(interface* a, interface* b){ //C'est comme si on connectait les deux interfaces avec un câble
     a->connected_to = b;
     b->connected_to = a;
     printf("Connexion: %s <-> %s\n",
@@ -21,7 +21,7 @@ void connect_two_interface(interface* a, interface* b){//c'est comme si on conne
        to_string_mac(&b->machine->addr_mac,  (char[20]){0}));
 };
 
-void send_data(interface *intf, trame *tr) {//ça envoie dans le "câble"
+void send_data(interface *intf, trame *tr) { //Ca envoie les données dans le "câble"
     if (intf->connected_to && intf->connected_to->machine) {
         receive_tram(intf->connected_to->machine, tr, intf->connected_to);
     }

@@ -11,7 +11,6 @@ typedef struct station
 
 void init_station(station * sta,ipv4 ip);
 
-
 void desinit_station(station *sta);
 
 char* to_string_station(station* st,char*  buffer);
