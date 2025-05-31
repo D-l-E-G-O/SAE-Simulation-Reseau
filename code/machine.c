@@ -5,7 +5,7 @@
 void init_machine(machine* machine, void* machine_pointer, type type, mac addr) {
     machine->machine = machine_pointer;
     machine->type = type;
-    machine->add_mac = addr;
+    machine->addr_mac = addr;
     if (type == SWITCH) {
         char macprintbuffer[1024]; 
         bridge *br = (bridge *)(machine->machine); 
@@ -31,7 +31,7 @@ void init_machine(machine* machine, void* machine_pointer, type type, mac addr) 
 
 void desinit_machine(machine* machine) {
     char macprintbuffer[1024]; 
-    printf(" desinit de : %s\n", to_string_mac(&machine->add_mac, macprintbuffer));
+    printf(" desinit de : %s\n", to_string_mac(&machine->addr_mac, macprintbuffer));
     
     if(machine->type == SWITCH) {
         desinit_bridge((bridge*)machine->machine);
@@ -39,7 +39,7 @@ void desinit_machine(machine* machine) {
         desinit_station((station*)machine->machine);
     }
     
-    machine->add_mac = -1;
+    machine->addr_mac = -1;
     
     desinit_inter(machine->interface);
     free(machine->interface);
@@ -71,7 +71,7 @@ void send_trame(machine* sender, trame *tr, interface* input_port) {
 }
 
 bool is_it_for_me_question_mark(machine *mach,trame* t){
-    return(compare_mac(&mach->add_mac,&t->dest));
+    return(compare_mac(&mach->addr_mac,&t->dest));
 }
 
 void receive_tram(machine* receiver, trame* tr, interface* input_port) {
@@ -79,21 +79,21 @@ void receive_tram(machine* receiver, trame* tr, interface* input_port) {
     if (receiver->type == STATION) {
         if (is_it_for_me_question_mark(receiver, tr)) {
             printf("Station %s: reçu trame de %s: [dest=%s, message=%d]\n",
-                   to_string_mac(&receiver->add_mac, mac_buffer),
+                   to_string_mac(&receiver->addr_mac, mac_buffer),
                    to_string_mac(&tr->source, mac_buffer),
                    to_string_mac(&tr->dest, mac_buffer),
                    tr->message);
 
             if (tr->message == 0) {
                 trame reply;
-                init_trame(&reply, receiver->add_mac, tr->source, 1);
+                init_trame(&reply, receiver->addr_mac, tr->source, 1);
                 send_trame(receiver, &reply, receiver->interface);
             }
         }
     } else if (receiver->type == SWITCH) {
         bridge *br = (bridge*)receiver->machine;
         printf("Switch %s: reçu trame de %s vers %s\n",
-               to_string_mac(&receiver->add_mac, mac_buffer),
+               to_string_mac(&receiver->addr_mac, mac_buffer),
                to_string_mac(&tr->source, mac_buffer),
                to_string_mac(&tr->dest, mac_buffer));
 

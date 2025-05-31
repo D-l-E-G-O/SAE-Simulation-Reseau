@@ -17,8 +17,8 @@ void connect_two_interface(interface* a, interface* b){//c'est comme si on conne
     a->connected_to = b;
     b->connected_to = a;
     printf("Connexion: %s <-> %s\n",
-       to_string_mac(&a->machine->add_mac,  (char[20]){0}),
-       to_string_mac(&b->machine->add_mac,  (char[20]){0}));
+       to_string_mac(&a->machine->addr_mac,  (char[20]){0}),
+       to_string_mac(&b->machine->addr_mac,  (char[20]){0}));
 };
 
 void send_data(interface *intf, trame *tr) {//ça envoie dans le "câble"

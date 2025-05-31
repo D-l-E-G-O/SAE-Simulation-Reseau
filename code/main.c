@@ -21,11 +21,11 @@ int main(int argc, char const *argv[]) {
     machine* station2 = g.sommets[13]->machine; 
     getchar();
     trame test_frame;
-    init_trame(&test_frame, station1->add_mac,station2->add_mac,0);               
-   getchar();
+    init_trame(&test_frame, station1->addr_mac,station2->addr_mac,0);               
+    getchar();
     printf("\n=== Envoi d'une trame de test ===\n");
-    printf("De: %s\n", to_string_mac(&station1->add_mac, (char[20]){0}));
-    printf("À: %s\n", to_string_mac(&station2->add_mac, (char[20]){0}));
+    printf("De: %s\n", to_string_mac(&station1->addr_mac, (char[20]){0}));
+    printf("À: %s\n", to_string_mac(&station2->addr_mac, (char[20]){0}));
     printf("Message: %d\n", test_frame.message);
     getchar();
     

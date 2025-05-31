@@ -14,7 +14,7 @@ typedef struct machine{
     void* machine;
     interface * interface;
     type type;
-    mac add_mac;
+    mac addr_mac;
 }machine;
 
 void init_machine(machine*  machine,void* machine_pointer,type type,mac addr);
