@@ -110,23 +110,21 @@ void receive_tram(machine* receiver, trame* tr, interface* input_port) {
 void connect_two_machine(machine* machine1, machine* machine2) {
     interface *intf1 = NULL, *intf2 = NULL;
 
-    if (machine1->type == SWITCH) {
-        bridge* br = (bridge*)machine1->machine;
-        intf1 = bridge_get_free_interface(br, machine1);
-    } else {
-        intf1 = machine1->interface;
-    }
-
-    if (machine2->type == SWITCH) {
-        bridge* br = (bridge*)machine2->machine;
-        intf2 = bridge_get_free_interface(br, machine2);
-    } else {
-        intf2 = machine2->interface;
-    }
+    assign_interface(&machine1, &intf1);
+    assign_interface(&machine2, &intf2);
 
     if (intf1 && intf2) {
         connect_two_interface(intf1, intf2);
     } else {
         fprintf(stderr, "Erreur: interface non disponible\n");
+    }
+}
+
+void assign_interface(machine** machine, interface** interface){
+    if ((*machine)->type == SWITCH) {
+        bridge* br = (bridge*)(*machine)->machine;
+        *interface = bridge_get_free_interface(br, *machine);
+    } else {
+        *interface = (*machine)->interface;
     }
 }

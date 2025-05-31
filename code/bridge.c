@@ -107,7 +107,7 @@ void print_switch_table(const bridge* bd) {
     printf("├─────────────────────┼─────────────────────┤\n");
 
     if (bd->table_length == 0) {
-        printf("│         Vide         │          -         │\n");
+        printf("│         Vide        │          -          │\n");
     } else {
         for (size_t i = 0; i < bd->table_length; i++) {
             printf("│  %s  ",to_string_mac(&bd->table[i].addr_mac, (char[20]){0}));
