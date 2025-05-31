@@ -100,21 +100,21 @@ void print_switch_table(const bridge* bd) {
         return;
     }
 
-    printf("+-------------------------------------------+\n");
-    printf("|        Table de commutation du bridge     |\n");
-    printf("+---------------------+---------------------+\n");
-    printf("| Adresse MAC         | Port d'interface    |\n");
-    printf("+---------------------+---------------------+\n");
+    printf("┌───────────────────────────────────────────┐\n");
+    printf("│       Table de commutation du bridge      │\n");
+    printf("├─────────────────────┬─────────────────────┤\n");
+    printf("│     Adresse MAC     │   Port d'interface  │\n");
+    printf("├─────────────────────┼─────────────────────┤\n");
 
     if (bd->table_length == 0) {
-        printf("|         Vide         |         -          |\n");
+        printf("│         Vide         │          -         │\n");
     } else {
         for (size_t i = 0; i < bd->table_length; i++) {
-            printf("|%s |",to_string_mac(&bd->table[i].addr_mac, (char[20]){0}));
-            printf("| %10zu         |\n", bd->table[i].index_port);
+            printf("│  %s  ",to_string_mac(&bd->table[i].addr_mac, (char[20]){0}));
+            printf("│ %10zu          │\n", bd->table[i].index_port);
         }
     }
 
-    printf("+---------------------+---------------------+\n");
+    printf("└─────────────────────┴─────────────────────┘\n");
     printf("Total entrées: %zu / %zu\n", bd->table_length, bd->max_table_length);
 }
