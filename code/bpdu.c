@@ -1,6 +1,17 @@
 #include <bpdu.h>
 
 
+void init_root_id(root_id* root_id, int8_t priorite, mac addr_mac){
+    root_id.priorite = priorite;
+    root_id.addr_mac = addr_mac;
+}
+
+void init_bpdu(bpdu* bpdu, root_id root, size_t cost, mac transmitting_id){
+    bpdu.root = root;
+    bpdu.cost = cost;
+    bpdu.transmitting_id = transmitting_id;
+}
+
 bool is_root_id_inferior_to(root_id r1, root_id r2){
     if (r1.priorite < r2.priorite || (r1.priorite == r2.priorite && is_mac_inferior_to(r1.addr_mac, r2.addr_mac))){
         return true;

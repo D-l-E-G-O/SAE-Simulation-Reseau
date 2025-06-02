@@ -13,6 +13,10 @@ typedef struct bpdu {
     mac transmitting_id;
 }bpdu;
 
+void init_root_id(root_id* root_id, int8_t priorite, mac addr_mac);
+
+void init_bpdu(bpdu* bpdu, root_id root, size_t cost, mac transmitting_id);
+
 bool is_root_id_inferior_to(root_id r1, root_id r2);
 
 bool root_id_equals(root_id r1, root_id r2);
