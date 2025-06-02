@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdio.h>
 
-// Initialise un bridge avec nb_ports et une priorité
 void init_bridge(bridge* bd, size_t nb_ports, size_t priorite) {
     bd->nb_ports = nb_ports;
     bd->priorite = priorite;
@@ -12,16 +11,19 @@ void init_bridge(bridge* bd, size_t nb_ports, size_t priorite) {
     bd->table_length = 0;
     bd->max_table_length = nb_ports;
 
-    bd->ports = (interface**)malloc(sizeof(interface*) * nb_ports);
-    memset(bd->ports, 0, sizeof(interface*) * nb_ports); 
+    bd->ports = (port**)malloc(sizeof(port*) * nb_ports);
+    memset(bd->ports,0, sizeof(port*)*nb_ports);
 }
+
 
 void desinit_bridge(bridge* bd) {
     if (!bd) return;
 
     for (size_t i = 0; i < bd->nb_ports; i++) {
         if (bd->ports[i]) {
-            desinit_inter(bd->ports[i]);
+            desinit_inter(bd->ports[i]->port);
+            bd->ports[i]->type = 0;
+            free(bd->ports[i]->port);
             free(bd->ports[i]);
             bd->ports[i] = NULL;
         }
@@ -64,7 +66,7 @@ void add_to_com_table(bridge* bd, mac addr, interface* inter) {
 
     size_t interface_index = (size_t)-1;
     for (size_t i = 0; i < bd->nb_ports; i++) {
-        if (bd->ports[i] == inter) {
+        if (bd->ports[i]->port == inter) {
             interface_index = i;
             break;
         }
@@ -84,12 +86,22 @@ interface* bridge_get_free_interface(bridge* bd, machine* mach) {
         if (bd->ports[i] == NULL) {
             interface* new_inter = malloc(sizeof(interface));
             if (!new_inter) return NULL;
-            
+
+            printf("je vais bind la nouvelle interface\n");
             init_interface(new_inter, mach);
-            bd->ports[i] = new_inter;
+            
+            bd->ports[i] = malloc(sizeof(port));
+            if (!bd->ports[i]) {
+                free(new_inter);
+                return NULL;
+            }
+
+            bd->ports[i]->port = new_inter;
+            bd->ports[i]->type = DESIGNE; 
             return new_inter;
         }
     }
+
     return NULL; 
 }
 

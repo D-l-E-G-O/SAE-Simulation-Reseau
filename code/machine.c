@@ -58,12 +58,12 @@ void send_trame(machine* sender, trame *tr, interface* input_port) {
         
         if (index != -1) {
             com* entry = &br->table[index];
-            interface* out_inter = br->ports[entry->index_port];
+            interface* out_inter = br->ports[entry->index_port]->port;
             send_data(out_inter, tr);
         } else {
             for (size_t i = 0; i < br->nb_ports; i++) {
-                if (br->ports[i] && (br->ports[i] != input_port)) {
-                    send_data(br->ports[i], tr);
+                if (br->ports[i] && (br->ports[i]->port != input_port)) {
+                    send_data(br->ports[i]->port, tr);
                 }
             }
         }
@@ -109,7 +109,7 @@ void receive_tram(machine* receiver, trame* tr, interface* input_port) {
 
 void connect_two_machine(machine* machine1, machine* machine2, size_t poids) {
     interface *intf1 = NULL, *intf2 = NULL;
-
+    printf("AAAAAAAAAAAAAAAAAAAAAAAAA");
     assign_interface(&machine1, &intf1);
     assign_interface(&machine2, &intf2);
 
