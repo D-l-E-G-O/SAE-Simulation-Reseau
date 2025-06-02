@@ -63,7 +63,7 @@ void parse_file(graphe *g, char* ligne[]) {
         size_t type;
         char buffer[MAX_LIGNE_SIZE];
         sscanf(ligne[i], "%zu;%[^\n]", &type, buffer);
-        machine * machine = malloc(sizeof(machine));
+        machine * mach = malloc(sizeof(machine));
         
         if(type == STATION) {
             char macAddr[18];  
@@ -73,7 +73,7 @@ void parse_file(graphe *g, char* ligne[]) {
             mac mac = string_to_mac(macAddr);
             ipv4 ip = string_to_ipv4(ipAddr);
             init_station(sta,ip);
-            init_machine(machine,(void*)sta,STATION,mac);
+            init_machine(mach,(void*)sta,STATION,mac);
         }
         else if(type == SWITCH) {
             char macAddr[18];
@@ -82,11 +82,11 @@ void parse_file(graphe *g, char* ligne[]) {
             bridge  * bd = malloc(sizeof(bridge));
             mac mac = string_to_mac(macAddr);
             init_bridge(bd,nb_port,priorite, mac);
-            init_machine(machine,(void*)bd,SWITCH,mac);
+            init_machine(mach,(void*)bd,SWITCH,mac);
         }
 
         sommet * som = malloc(sizeof(sommet));
-        init_sommet(som,i-1,machine);
+        init_sommet(som,i-1,mach);
         add_sommet(g,som,i-1);
     }
 

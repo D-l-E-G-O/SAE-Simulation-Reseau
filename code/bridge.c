@@ -6,13 +6,14 @@
 void init_bridge(bridge* bd, size_t nb_ports, size_t priorite, mac addr_mac) {
     bd->nb_ports = nb_ports;
     bd->priorite = priorite;
+    
     bd->addr_mac = addr_mac;
     init_bpdu(&bd->bpdu, priorite, addr_mac);
-
+    
     bd->table = (com*)malloc(sizeof(com) * nb_ports);
     bd->table_length = 0;
     bd->max_table_length = nb_ports;
-
+    bd->file_trame = malloc(sizeof(trame)*16);
     bd->ports = (port**)malloc(sizeof(port*) * nb_ports);
     memset(bd->ports,0, sizeof(port*)*nb_ports);
 }
