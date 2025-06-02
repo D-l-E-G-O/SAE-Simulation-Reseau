@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]) {
     parse_file(&g , lignes);
 
 
-    printf("\n=== Test d'envoi d'une trame ===\n");
+    printf("\n=== Test d'envoi d'une trame entre machines ===\n");
     getchar();
     machine* station1 = g.sommets[7]->machine; 
     machine* station2 = g.sommets[13]->machine;
@@ -34,11 +34,6 @@ int main(int argc, char const *argv[]) {
     printf("\n=== Affichage de la Table de commutation ===\n");
     getchar();
     print_switch_table((bridge*)g.sommets[0]->machine->machine);
-
-
-    printf("\n=== Affichage de la matrice d'adjacence ===\n");
-    getchar();
-    afficher_matrice(&g);
 
 
     printf("\n=== Libération de la mémoire ===\n");
