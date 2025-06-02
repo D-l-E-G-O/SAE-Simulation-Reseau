@@ -5,10 +5,13 @@
 #include <string.h>
 
 
-bool compare_mac(mac const* mac1, mac const* mac2){
-    return *mac1 == *mac2;
+bool mac_equals(mac mac1, mac mac2){
+    return mac1 == mac2;
 }
 
+bool is_mac_inferior_to(mac mac1, mac mac2){
+    return mac1 < mac2;
+}
 
 char* to_string_mac(mac const* mac, char * buffer) {
     buffer[0] = '\0'; 

@@ -72,7 +72,7 @@ void send_trame(machine* sender, trame *tr, interface* input_port) {
 }
 
 bool is_it_for_me_question_mark(machine *mach,trame* t){
-    return(compare_mac(&mach->addr_mac,&t->dest));
+    return(mac_equals(mach->addr_mac,t->dest));
 }
 
 void receive_tram(machine* receiver, trame* tr, interface* input_port) {
