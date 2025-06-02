@@ -4,21 +4,25 @@
 
 void init_interface(interface* inter, machine* machine) {
     if (!inter) return;
-    
     inter->machine = machine;
-    inter->connected_to = NULL; 
+    inter->connected_to = NULL;
+    inter->poids = -1;
 };
 
 void desinit_inter(interface* inter){
     inter->machine = NULL;
 }
 
-void connect_two_interface(interface* a, interface* b){ //C'est comme si on connectait les deux interfaces avec un câble
+void connect_two_interface(interface* a, interface* b, size_t poids){ //C'est comme si on connectait les deux interfaces avec un câble
     a->connected_to = b;
+    a->poids = poids;
     b->connected_to = a;
-    printf("Connexion: %s <-> %s\n",
+    b->poids = poids;
+    printf("Connexion: %s <-> %s (Poids: %zu)\n",
        to_string_mac(&a->machine->addr_mac,  (char[20]){0}),
-       to_string_mac(&b->machine->addr_mac,  (char[20]){0}));
+       to_string_mac(&b->machine->addr_mac,  (char[20]){0}),
+       poids;
+    );
 };
 
 void send_data(interface *intf, trame *tr) { //Ca envoie les données dans le "câble"

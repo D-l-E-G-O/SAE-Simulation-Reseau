@@ -107,14 +107,14 @@ void receive_tram(machine* receiver, trame* tr, interface* input_port) {
     }
 }
 
-void connect_two_machine(machine* machine1, machine* machine2) {
+void connect_two_machine(machine* machine1, machine* machine2, size_t poids) {
     interface *intf1 = NULL, *intf2 = NULL;
 
     assign_interface(&machine1, &intf1);
     assign_interface(&machine2, &intf2);
 
     if (intf1 && intf2) {
-        connect_two_interface(intf1, intf2);
+        connect_two_interface(intf1, intf2, poids);
     } else {
         fprintf(stderr, "Erreur: interface non disponible\n");
     }
