@@ -54,15 +54,15 @@ int close_file(FILE* file, char* lignes[], int nb_lignes) {
 }                                                                    
                                                                                 
 void parse_file(graphe *g, char* ligne[]) {
-    int nb_machine = 0;
-    int nb_connexion = 0;
-    sscanf(ligne[0], "%d %d", &nb_machine, &nb_connexion);
-    printf("nb machine : %d nb connexion : %d\n", nb_machine, nb_connexion);
+    size_t nb_machine = 0;
+    size_t nb_connexion = 0;
+    sscanf(ligne[0], "%zu %zu", &nb_machine, &nb_connexion);
+    printf("nb machine : %zu nb connexion : %zu\n", nb_machine, nb_connexion);
     init_graphe(g,nb_machine);
-    for(int i = 1; i <= nb_machine; i++) {
-        int type;
+    for(size_t i = 1; i <= nb_machine; i++) {
+        size_t type;
         char buffer[MAX_LIGNE_SIZE];
-        sscanf(ligne[i], "%d;%[^\n]", &type, buffer);
+        sscanf(ligne[i], "%zu;%[^\n]", &type, buffer);
         machine * mach = malloc(sizeof(machine));
         
         if(type == STATION) {
@@ -77,8 +77,8 @@ void parse_file(graphe *g, char* ligne[]) {
         }
         else if(type == SWITCH) {
             char macAddr[18];
-            int nb_port, priorite;
-            sscanf(buffer, "%[^;];%d;%d", macAddr, &nb_port, &priorite);
+            size_t nb_port, priorite;
+            sscanf(buffer, "%[^;];%zu;%zu", macAddr, &nb_port, &priorite);
             bridge  * bd = malloc(sizeof(bridge));
             mac mac = string_to_mac(macAddr);
             init_bridge(bd,nb_port,priorite);
@@ -90,9 +90,9 @@ void parse_file(graphe *g, char* ligne[]) {
         add_sommet(g,som,i-1);
     }
 
-    for(int i = nb_machine + 1; i <= nb_machine + nb_connexion; i++) {
+    for(size_t i = nb_machine + 1; i <= nb_machine + nb_connexion; i++) {
         size_t poids, indexmachine1, indexmachine2;
-        sscanf(ligne[i], "%d;%d;%d", &poids, &indexmachine1, &indexmachine2);
+        sscanf(ligne[i], "%zu;%zu;%zu", &poids, &indexmachine1, &indexmachine2);
       
         connect_two_machine(g->sommets[indexmachine1-1]->machine, g->sommets[indexmachine2-1]->machine, poids);
     }

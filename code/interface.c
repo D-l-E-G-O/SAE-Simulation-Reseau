@@ -21,7 +21,7 @@ void connect_two_interface(interface* a, interface* b, size_t poids){ //C'est co
     printf("Connexion: %s <-> %s (Poids: %zu)\n",
        to_string_mac(&a->machine->addr_mac,  (char[20]){0}),
        to_string_mac(&b->machine->addr_mac,  (char[20]){0}),
-       poids;
+       poids
     );
 };
 

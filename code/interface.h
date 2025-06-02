@@ -1,6 +1,8 @@
 #pragma once
 #include <trame.h>
 #include <machine.h>
+#include <stddef.h>
+
 
 typedef struct machine machine;
 
@@ -17,7 +19,7 @@ typedef struct interface
 void init_interface(interface * inter, machine* machine);
 void desinit_inter(interface* inter);
 
-void connect_two_interface(interface* a, interface* b);
+void connect_two_interface(interface* a, interface* b, size_t poids);
 
 void send_data(interface* sender,trame * data);
 
