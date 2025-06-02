@@ -5,7 +5,8 @@
 
 //typedef uint8_t mac[6];
 typedef uint64_t mac;
-bool compare_mac(mac const * mac1, mac const* mac2);
+bool mac_equals(mac mac1, mac mac2);
+bool is_mac_inferior_to(mac mac1, mac mac2);
 char* to_string_mac(mac const * mac,char * buffer);
 void afficher_mac( mac const* mac);
 mac string_to_mac(char* string);
