@@ -90,6 +90,7 @@ void parse_file(graphe *g, char* ligne[]) {
         add_sommet(g,som,i-1);
     }
 
+
     for(size_t i = nb_machine + 1; i <= nb_machine + nb_connexion; i++) {
         size_t poids, indexmachine1, indexmachine2;
         sscanf(ligne[i], "%zu;%zu;%zu", &poids, &indexmachine1, &indexmachine2);

@@ -9,14 +9,26 @@
 typedef struct interface interface;
 typedef struct machine machine;
 
+
+
+typedef struct port{
+    interface * port;
+    port_type type;
+    
+}port;
+
+
 typedef struct bridge {
     size_t nb_ports;
     size_t priorite;
     size_t table_length;
     size_t max_table_length;
     com* table;
-    interface** ports;
+    port** ports;
 } bridge;
+
+
+
 
 void init_bridge(bridge* bd, size_t nb_ports, size_t priorite);
 void desinit_bridge(bridge* bd);

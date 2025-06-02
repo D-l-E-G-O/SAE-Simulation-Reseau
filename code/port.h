@@ -4,7 +4,7 @@ typedef enum {
     RACINE = 0,
     DESIGNE = 1,
     NONDESIGNE = 2
-} port;
+} port_type;
 
 typedef struct com
 {
