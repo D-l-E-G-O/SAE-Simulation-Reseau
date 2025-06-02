@@ -14,6 +14,7 @@ typedef struct machine machine;
 typedef struct port{
     interface * port;
     port_type type;
+    
 }port;
 
 

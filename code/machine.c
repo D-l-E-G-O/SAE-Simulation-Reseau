@@ -14,6 +14,7 @@ void init_machine(machine* machine, void* machine_pointer, type type, mac addr) 
                br->nb_ports,
                br->priorite);
         machine->interface = malloc(sizeof(interface));
+        
     } else {
         char bufferIP[1024];
         station *sta = (station *)(machine->machine); 
@@ -109,7 +110,6 @@ void receive_tram(machine* receiver, trame* tr, interface* input_port) {
 
 void connect_two_machine(machine* machine1, machine* machine2, size_t poids) {
     interface *intf1 = NULL, *intf2 = NULL;
-    printf("AAAAAAAAAAAAAAAAAAAAAAAAA");
     assign_interface(&machine1, &intf1);
     assign_interface(&machine2, &intf2);
 

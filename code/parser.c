@@ -88,10 +88,8 @@ void parse_file(graphe *g, char* ligne[]) {
         sommet * som = malloc(sizeof(sommet));
         init_sommet(som,i-1,mach);
         add_sommet(g,som,i-1);
-        printf("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG\n");
     }
 
-    printf("BBBBBBBBBBBBBBBBBBBBBBBBBBB");
 
     for(size_t i = nb_machine + 1; i <= nb_machine + nb_connexion; i++) {
         size_t poids, indexmachine1, indexmachine2;
