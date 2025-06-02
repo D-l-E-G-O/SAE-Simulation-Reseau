@@ -79,7 +79,7 @@ void receive_tram(machine* receiver, trame* tr, interface* input_port) {
     char mac_buffer[20];
     if (receiver->type == STATION) {
         if (is_it_for_me_question_mark(receiver, tr)) {
-            printf("Station %s: reçu trame de %s: [dest=%s, message=%d]\n",
+            printf("Station %s: reçu trame de %s: [dest=%s, message=%zu]\n",
                    to_string_mac(&receiver->addr_mac, mac_buffer),
                    to_string_mac(&tr->source, mac_buffer),
                    to_string_mac(&tr->dest, mac_buffer),
