@@ -34,5 +34,5 @@ char* to_string_sommet(const sommet* sommet,char * buffer);
 char* to_string_graphe(const graphe* matrice,char* buffer);
 
 
-void afficher_matrice();
+void afficher_matrice(const graphe* g);
 void afficher_sommet();

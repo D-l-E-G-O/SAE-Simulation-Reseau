@@ -64,7 +64,7 @@ void desinit_sommet(sommet *s){
 };
                                                                                                                                                             
                                                                                 
-void add_vertex(graphe *g,sommet a , sommet b , int poids ){                                   
+void add_vertex(graphe *g, sommet a, sommet b, int poids){                                   
     g->matrice[a.index][b.index] = poids ;                                       
 };                                                                              
                                                                                 
@@ -74,9 +74,9 @@ void add_vertex(graphe *g,sommet a , sommet b , int poids ){
 char* to_string_graphe(const graphe* g, char* buffer) {
     if (!g || !buffer) return NULL;
     int pos = 0;
-    buffer[0] = '\0'; 
+    buffer[0] = '\0';
     for (int i = 0; i < g->ordre; ++i) {
-        pos += sprintf(buffer + pos, "   %c", 'A' + i);
+        pos += sprintf(buffer + pos, "  %c", 'A' + i);
     }
     for (int i = 0; i < g->ordre; ++i) {
         pos += sprintf(buffer + pos, "\n%c", 'A' + i); 
@@ -90,5 +90,9 @@ char* to_string_graphe(const graphe* g, char* buffer) {
 
 char* to_string_sommet(const sommet* sommet,char* buffer);                                   
                                                                                 
-void afficher_matrice();                                                        
+void afficher_matrice(const graphe* g){
+    char buffer[1024];
+    printf("\n%s\n", to_string_graphe(g, buffer));
+}
+
 void afficher_sommet();                                                         

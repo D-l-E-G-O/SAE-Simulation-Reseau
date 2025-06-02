@@ -35,6 +35,12 @@ int main(int argc, char const *argv[]) {
     getchar();
     print_switch_table((bridge*)g.sommets[0]->machine->machine);
 
+
+    printf("\n=== Affichage de la matrice d'adjacence ===\n");
+    getchar();
+    afficher_matrice(&g);
+
+
     printf("\n=== Libération de la mémoire ===\n");
     getchar();
     desinit_graphe(&g);
