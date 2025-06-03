@@ -52,7 +52,9 @@ void desinit_machine(machine* machine) {
 
 void send_trame(machine* sender, trame *tr, interface* input_port) {
     if (sender->type == STATION) {
-        send_data(sender->interface, tr);
+        trame reply;
+        init_trame(&reply, tr->dest, tr->source, tr->message, tr->type);
+        send_data(sender->interface, &reply);
     } else if (sender->type == SWITCH) {
         bridge *br = (bridge*)sender->machine;
         int index = check_if_in_com_table(br, tr->dest);
@@ -60,15 +62,20 @@ void send_trame(machine* sender, trame *tr, interface* input_port) {
         if (index != -1) {
             com* entry = &br->table[index];
             interface* out_inter = br->ports[entry->index_port]->port;
-            send_data(out_inter, tr);
+            trame reply;
+            init_trame(&reply, tr->dest, tr->source, tr->message, tr->type);
+            send_data(out_inter, &reply);
         } else {
             for (size_t i = 0; i < br->nb_ports; i++) {
                 if (br->ports[i] && (br->ports[i]->port != input_port)) {
-                    send_data(br->ports[i]->port, tr);
+                    trame reply;
+                    init_trame(&reply, tr->dest, tr->source, tr->message, tr->type);
+                    send_data(br->ports[i]->port, &reply);
                 }
             }
         }
     }
+    desinit_trame(tr);
 }
 
 bool is_it_for_me_question_mark(machine *mach,trame* t){
@@ -77,17 +84,16 @@ bool is_it_for_me_question_mark(machine *mach,trame* t){
 
 void receive_tram(machine* receiver, trame* tr, interface* input_port) {
     char mac_buffer[20];
+    char trame_buffer[64];
     if (receiver->type == STATION) {
         if (is_it_for_me_question_mark(receiver, tr)) {
-            printf("Station %s: reçu trame de %s: [dest=%s, message=%zu]\n",
-                   to_string_mac(&receiver->addr_mac, mac_buffer),
-                   to_string_mac(&tr->source, mac_buffer),
-                   to_string_mac(&tr->dest, mac_buffer),
-                   tr->message);
-
-            if (tr->message == 0) {
+            printf("Station %s: reçu trame de %s:\n", to_string_mac(&receiver->addr_mac, mac_buffer), to_string_mac(&tr->source, mac_buffer));
+            printf("    Destination = %s\n", to_string_mac(&tr->dest, mac_buffer));
+            printf("    Message = %s\n\n", to_string_message(tr, trame_buffer));
+            if (tr->type == PING && *((ping*)tr->message) == 0) {
                 trame reply;
-                init_trame(&reply, receiver->addr_mac, tr->source, 1);
+                size_t message = 1;
+                init_trame(&reply, receiver->addr_mac, tr->source, &message, PING);
                 send_trame(receiver, &reply, receiver->interface);
             }
         }
@@ -104,8 +110,11 @@ void receive_tram(machine* receiver, trame* tr, interface* input_port) {
             printf(" Avertissement: port d'entrée inconnu\n");
         }
 
-        send_trame(receiver, tr, input_port);
+        trame reply;
+        init_trame(&reply, receiver->addr_mac, tr->source, tr->message, tr->type);
+        send_trame(receiver, &reply, input_port);
     }
+    desinit_trame(tr);
 }
 
 void connect_two_machine(machine* machine1, machine* machine2, size_t poids) {

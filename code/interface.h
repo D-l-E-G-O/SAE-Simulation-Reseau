@@ -1,5 +1,4 @@
 #pragma once
-#include <trame.h>
 #include <machine.h>
 #include <stddef.h>
 
@@ -21,6 +20,6 @@ void desinit_inter(interface* inter);
 
 void connect_two_interface(interface* a, interface* b, size_t poids);
 
-void send_data(interface* sender,trame * data);
+void send_data(interface* sender, void* data);
 
-void receive_data(interface *receiver,trame * data);
+void receive_data(interface *receiver, void* data);
