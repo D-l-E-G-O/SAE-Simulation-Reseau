@@ -5,11 +5,10 @@
 #include <interface.h>
 #include <adress.h>
 #include <machine.h>
-#include <bpdu.h>
+#include <trame.h>
 
 typedef struct interface interface;
 typedef struct machine machine;
-
 
 
 typedef struct port{

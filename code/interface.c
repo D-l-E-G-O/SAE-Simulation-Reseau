@@ -25,14 +25,14 @@ void connect_two_interface(interface* a, interface* b, size_t poids){ //C'est co
     );
 };
 
-void send_data(interface *intf, trame *tr) { //Ca envoie les données dans le "câble"
+void send_data(interface *intf, void *tr) { //Ca envoie les données dans le "câble"
     if (intf->connected_to && intf->connected_to->machine) {
         receive_tram(intf->connected_to->machine, tr, intf->connected_to);
     }
 }
 
-void receive_data(interface *receiver, trame *data) {
-    if (receiver->machine) {3
+void receive_data(interface *receiver, void *data) {
+    if (receiver->machine) {
         receive_tram(receiver->machine, data, receiver);
     }
 }

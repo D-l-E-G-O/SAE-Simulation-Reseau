@@ -25,12 +25,14 @@ int main(int argc, char const *argv[]) {
     getchar();
     machine* station1 = g.sommets[7]->machine; 
     machine* station2 = g.sommets[13]->machine;
-    trame test_frame;
-    init_trame(&test_frame, station1->addr_mac,station2->addr_mac,0);    
+    trame test_trame;
+    size_t pong = 0;
+    char msg_buffer[128];
+    init_trame(&test_trame, station1->addr_mac,station2->addr_mac,&pong, PING);    
     printf("De: %s\n", to_string_mac(&station1->addr_mac, (char[20]){0}));
     printf("À: %s\n", to_string_mac(&station2->addr_mac, (char[20]){0}));
-    printf("Message: %zu\n", test_frame.message);
-    send_trame(station1, &test_frame,station1->interface);
+    printf("Message: %s\n", to_string_message(&test_trame, msg_buffer));
+    send_trame(station1, &test_trame,station1->interface);
 
 
     printf("\n=== Test d'ajout dans la file ===\n");
