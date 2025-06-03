@@ -6,6 +6,7 @@
 #include "trame.h"  
 #include "machine.h"
 #include <bpdu.h>
+#include <bridge.h>
 
 int main(int argc, char const *argv[]) {
         
@@ -30,31 +31,24 @@ int main(int argc, char const *argv[]) {
     printf("À: %s\n", to_string_mac(&station2->addr_mac, (char[20]){0}));
     printf("Message: %zu\n", test_frame.message);
     send_trame(station1, &test_frame,station1->interface);
-    
+
+
+    printf("\n=== Test d'ajout dans la file ===\n");
+    getchar();
+    bridge * test_file =  (bridge*)(g.sommets[0]->machine->machine);
+    trame test_trame;
+    init_trame(&test_trame, station1->addr_mac,station2->addr_mac,0);   
+    file_append(test_file,test_trame);
+    trame popped_trame = file_pop(test_file);
+    printf("Test de pop  %s\n" , to_string_mac(&popped_trame.dest, (char[20]){0}));
+    popped_trame = file_pop(test_file);
     
     printf("\n=== Affichage de la Table de commutation ===\n");
     getchar();
     print_switch_table((bridge*)g.sommets[0]->machine->machine);
 
 
-    printf("\n=== Test BPDU ===\n");
-    getchar();
-    bpdu bpdu;
-    init_bpdu(&bpdu, 1, station1->addr_mac);
-    char buffer[20];
-    to_string_mac(&station1->addr_mac, buffer);
-    printf("Création BPDU: [%s,0,%s]\n",buffer, buffer);
-    char string_bpdu[64];
-    to_string_bpdu(bpdu, string_bpdu);
-    printf("to_string_bpdu: %s\n", string_bpdu);
-    size_t int_bpdu = to_int_string_bpdu(string_bpdu);
-    printf("to_int_string_bpdu: %zu\n", int_bpdu);
-    char new_string_bpdu[64];
-    to_string_int_bpdu(int_bpdu, new_string_bpdu);
-    printf("to_string_int_bpdu: %s\n", new_string_bpdu);
-
-
-    printf("\n=== Libération de la mémoire ===\n");
+    printf("\n=== Libération deux là mémoireuh ===\n");
     getchar();
     desinit_graphe(&g);
     close_file(file,lignes,nb_lignes);

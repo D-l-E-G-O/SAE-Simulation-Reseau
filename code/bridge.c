@@ -14,6 +14,8 @@ void init_bridge(bridge* bd, size_t nb_ports, size_t priorite, mac addr_mac) {
     bd->table_length = 0;
     bd->max_table_length = nb_ports;
     bd->file_trame = malloc(sizeof(trame)*16);
+    bd->file_size=0;
+    bd->file_max_length = 16;
     bd->ports = (port**)malloc(sizeof(port*) * nb_ports);
     memset(bd->ports,0, sizeof(port*)*nb_ports);
 }
@@ -34,6 +36,9 @@ void desinit_bridge(bridge* bd) {
 
     free(bd->ports);
     bd->ports = NULL;
+
+    free(bd->file_trame);
+    bd->file_trame =NULL;
 
     free(bd->table);
     bd->table = NULL;
@@ -132,4 +137,37 @@ void print_switch_table(const bridge* bd) {
 
     printf("└─────────────────────┴─────────────────────┘\n");
     printf("Total entrées: %zu / %zu\n", bd->table_length, bd->max_table_length);
+}
+
+
+
+void file_append(bridge *bd, trame tram) {
+    if (bd->file_size + 1 >= bd->file_max_length) {
+        size_t new_max = bd->file_max_length * 2;
+        trame *new_buffer = realloc(bd->file_trame, new_max * sizeof(trame));
+        if (new_buffer == NULL) {
+            printf("ERROR\n");
+            return;
+        }
+        bd->file_trame = new_buffer;
+        bd->file_max_length = new_max;
+    }
+
+    bd->file_trame[bd->file_size] = tram;
+    bd->file_size++;
+}
+
+trame file_pop(bridge *bd) {
+    if (bd->file_size == 0) {
+        printf("ERROR\n");
+        trame empty_trame = {0}; 
+        return empty_trame;
+    }
+
+    trame res = bd->file_trame[0];
+    for (size_t i = 1; i < bd->file_size; i++) {
+        bd->file_trame[i - 1] = bd->file_trame[i];
+    }
+    bd->file_size--;
+    return res;
 }

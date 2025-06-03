@@ -28,6 +28,8 @@ typedef struct bridge {
     bpdu bpdu;
     mac addr_mac;
     trame* file_trame;
+    size_t file_max_length;
+    size_t file_size;
 } bridge;
 
 
@@ -40,3 +42,6 @@ int check_if_in_com_table(bridge* bd, mac addr);
 interface* bridge_get_free_interface(bridge* bd,machine* mach);
 
 void print_switch_table(const bridge* bd);
+
+void file_append(bridge * bd,trame trame);
+trame file_pop(bridge* bd);

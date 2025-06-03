@@ -32,7 +32,7 @@ void send_data(interface *intf, trame *tr) { //Ca envoie les données dans le "c
 }
 
 void receive_data(interface *receiver, trame *data) {
-    if (receiver->machine) {
+    if (receiver->machine) {3
         receive_tram(receiver->machine, data, receiver);
     }
 }
