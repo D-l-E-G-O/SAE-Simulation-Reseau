@@ -91,12 +91,13 @@ void parse_file(graphe *g, char* ligne[]) {
     }
 
 
-    for(size_t i = nb_machine + 1; i <= nb_machine + nb_connexion; i++) {
+    for (size_t i = nb_machine + 1; i < nb_machine + 1 + nb_connexion; i++) {
         size_t poids, indexmachine1, indexmachine2;
         sscanf(ligne[i], "%zu;%zu;%zu", &poids, &indexmachine1, &indexmachine2);
-      
-        connect_two_machine(g->sommets[indexmachine1-1]->machine, g->sommets[indexmachine2-1]->machine, poids);
+        //printf("%ld , %ld , %ld \n" , poids ,indexmachine1,indexmachine2);
+        connect_two_machine(g->sommets[indexmachine1]->machine, g->sommets[indexmachine2]->machine, poids);
     }
+
 }                                                           
                                                                                 
                                                                                 

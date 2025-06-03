@@ -171,3 +171,40 @@ trame file_pop(bridge *bd) {
     bd->file_size--;
     return res;
 }
+
+
+
+void process_trame(bridge *br,trame* tr,interface* input_port){
+    if(tr->type == PING){
+        int index = check_if_in_com_table(br, tr->dest);
+        if (index != -1) {
+            com* entry = &br->table[index];
+            interface* out_inter = br->ports[entry->index_port]->port;
+
+            if (out_inter != input_port) { 
+                trame reply;
+                copy_trame(&reply, tr);
+                send_data(out_inter, &reply);
+                desinit_trame(&reply); 
+            }
+        } else {
+            for (size_t i = 0; i < br->nb_ports; i++) {
+                if (br->ports[i] && (br->ports[i]->port != input_port)) {
+                    trame reply;
+                    copy_trame(&reply, tr);
+                    send_data(br->ports[i]->port, &reply);
+                    desinit_trame(&reply); 
+                }
+            }
+        }
+    }
+    if(tr->type == BPDU){
+        bpdu* bp = (bpdu*)tr->message;
+        if(get_best_bpdu(&br->bpdu,bp)){
+            printf("C meilleur"); 
+        };
+    }
+
+
+
+}

@@ -23,7 +23,7 @@ bool is_root_id_inferior_to(root_id r1, root_id r2);
 
 bool root_id_equals(root_id r1, root_id r2);
 
-bpdu get_best_bpdu(bpdu machine1, bpdu machine2);
+bpdu* get_best_bpdu(bpdu* machine1, bpdu*  machine2);
 
 char* to_string_bpdu(bpdu bpdu, char* buffer);
 

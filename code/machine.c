@@ -54,32 +54,10 @@ void send_trame(machine* sender, trame *tr, interface* input_port) {
         send_data(sender->interface, &reply);
         desinit_trame(&reply); 
     } else if (sender->type == SWITCH) {
-        bridge *br = (bridge*)sender->machine;
-        int index = check_if_in_com_table(br, tr->dest);
-
-        if (index != -1) {
-            com* entry = &br->table[index];
-            interface* out_inter = br->ports[entry->index_port]->port;
-
-            if (out_inter != input_port) { 
-                trame reply;
-                copy_trame(&reply, tr);
-                send_data(out_inter, &reply);
-                desinit_trame(&reply); 
-            }
-        } else {
-            for (size_t i = 0; i < br->nb_ports; i++) {
-                if (br->ports[i] && (br->ports[i]->port != input_port)) {
-                    trame reply;
-                    copy_trame(&reply, tr);
-                    send_data(br->ports[i]->port, &reply);
-                    desinit_trame(&reply); 
-                }
-            }
-        }
+         bridge *br = (bridge*)sender->machine;
+         process_trame(br,tr, input_port);
     }
 
-    // desinit_trame(tr); 
 }
 
 bool is_it_for_me_question_mark(machine *mach, trame* t) {

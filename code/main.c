@@ -14,7 +14,7 @@ int main(int argc, char const *argv[]) {
     getchar();
     int MAX_LIGNES = 1024;
     FILE *file;
-    file = open_file("mylan_no_cycle.lan");
+    file = open_file("mylan.lan");
     char* lignes[MAX_LIGNES];  
     int nb_lignes = read_file(file, lignes);
     graphe g;
@@ -35,16 +35,6 @@ int main(int argc, char const *argv[]) {
     send_trame(station1, &test_trame,station1->interface);
     desinit_trame(&test_trame);
 
-    // printf("\n=== Test d'ajout dans la file ===\n");
-    // getchar();
-    // bridge * test_file =  (bridge*)(g.sommets[0]->machine->machine);
-    // trame test_trame;
-    // init_trame(&test_trame, station1->addr_mac,station2->addr_mac,0);   
-    // file_append(test_file,test_trame);
-    // trame popped_trame = file_pop(test_file);
-    // printf("Test de pop  %s\n" , to_string_mac(&popped_trame.dest, (char[20]){0}));
-    // popped_trame = file_pop(test_file);
-    
     printf("\n=== Affichage de la Table de commutation ===\n");
     getchar();
     print_switch_table((bridge*)g.sommets[0]->machine->machine);

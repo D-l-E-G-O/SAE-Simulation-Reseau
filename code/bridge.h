@@ -44,3 +44,5 @@ void print_switch_table(const bridge* bd);
 
 void file_append(bridge * bd,trame trame);
 trame file_pop(bridge* bd);
+
+void process_trame(bridge *bd,trame* trame,interface* input_port);
