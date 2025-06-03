@@ -13,6 +13,12 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CFLAGS ?= $(INC_FLAGS) -MMD -MP -O3
 
+.PHONY: all run clean
+
+all: $(TARGET_DIR)/$(TARGET_EXEC)
+	@clear
+	@valgrind ./$(TARGET_DIR)/$(TARGET_EXEC)
+
 $(TARGET_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(MKDIR_P) $(dir $@)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS)
@@ -20,8 +26,6 @@ $(TARGET_DIR)/$(TARGET_EXEC): $(OBJS)
 $(BUILD_DIR)/%.c.o: %.c
 	$(MKDIR_P) $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-.PHONY: clean
 
 clean:
 	$(RM) -r $(BUILD_DIR) $(TARGET_DIR)
