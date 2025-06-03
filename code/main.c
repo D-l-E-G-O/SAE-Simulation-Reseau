@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]) {
     send_trame(station1, &test_trame,station1->interface);
     desinit_trame(&test_trame);
 
-    printf("\n=== Test d'ajout dans la file ===\n");
+    // printf("\n=== Test d'ajout dans la file ===\n");
     // getchar();
     // bridge * test_file =  (bridge*)(g.sommets[0]->machine->machine);
     // trame test_trame;
