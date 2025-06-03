@@ -15,5 +15,6 @@ void desinit_station(station *sta);
 
 char* to_string_station(station* st,char*  buffer);
 
+void copy_trame(trame* dest, const trame* src);
 
 

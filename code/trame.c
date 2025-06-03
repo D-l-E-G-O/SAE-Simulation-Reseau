@@ -3,20 +3,24 @@
 #include <stdlib.h>
 
 void init_trame(trame * tra, mac source, mac dest, void* message, trame_type type){
-    tra->dest =dest;
+    tra->dest = dest;
     tra->source = source;
+    tra->type = type;
+
     switch(type){
         case PING:
-            ping p = *((ping*)message);
-            tra->message = (ping*)(&p);
+            tra->message = malloc(sizeof(ping));
+            if (tra->message == NULL) exit(EXIT_FAILURE);
+            *((ping*)tra->message) = *((ping*)message);
             break;
         case BPDU:
-            bpdu b = *((bpdu*)message);
-            tra->message = (bpdu*)(&b);
+            tra->message = malloc(sizeof(bpdu));
+            if (tra->message == NULL) exit(EXIT_FAILURE);
+            *((bpdu*)tra->message) = *((bpdu*)message);
             break;
     }
-    tra->type = type;
-};
+}
+
 
 char* to_string_message(const trame* tra, char* buffer){
     switch(tra->type){
@@ -35,11 +39,13 @@ char* to_string_message(const trame* tra, char* buffer){
 void desinit_trame(trame* tra){
     switch(tra->type){
         case PING:
-            free((ping*)tra->message);
-            break;
         case BPDU:
-            free((bpdu*)tra->message);
+            free(tra->message);
             break;
     }
-    //free(tra);
+}
+
+
+void copy_trame(trame* dest, const trame* src) {
+    init_trame(dest, src->source, src->dest, src->message, src->type);
 }

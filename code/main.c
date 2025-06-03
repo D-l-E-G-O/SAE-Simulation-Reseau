@@ -33,17 +33,17 @@ int main(int argc, char const *argv[]) {
     printf("À: %s\n", to_string_mac(&station2->addr_mac, (char[20]){0}));
     printf("Message: %s\n", to_string_message(&test_trame, msg_buffer));
     send_trame(station1, &test_trame,station1->interface);
-
+    desinit_trame(&test_trame);
 
     printf("\n=== Test d'ajout dans la file ===\n");
-    getchar();
-    bridge * test_file =  (bridge*)(g.sommets[0]->machine->machine);
-    trame test_trame;
-    init_trame(&test_trame, station1->addr_mac,station2->addr_mac,0);   
-    file_append(test_file,test_trame);
-    trame popped_trame = file_pop(test_file);
-    printf("Test de pop  %s\n" , to_string_mac(&popped_trame.dest, (char[20]){0}));
-    popped_trame = file_pop(test_file);
+    // getchar();
+    // bridge * test_file =  (bridge*)(g.sommets[0]->machine->machine);
+    // trame test_trame;
+    // init_trame(&test_trame, station1->addr_mac,station2->addr_mac,0);   
+    // file_append(test_file,test_trame);
+    // trame popped_trame = file_pop(test_file);
+    // printf("Test de pop  %s\n" , to_string_mac(&popped_trame.dest, (char[20]){0}));
+    // popped_trame = file_pop(test_file);
     
     printf("\n=== Affichage de la Table de commutation ===\n");
     getchar();
