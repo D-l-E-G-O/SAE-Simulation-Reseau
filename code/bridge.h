@@ -11,10 +11,13 @@ typedef struct interface interface;
 typedef struct machine machine;
 
 
-typedef struct port{
-    interface * port;
+typedef struct port {
+    interface* port;
     port_type type;
-}port;
+    bool type_changed;
+    bpdu* best_received;
+} port;
+
 
 
 typedef struct bridge {
@@ -24,11 +27,10 @@ typedef struct bridge {
     size_t max_table_length;
     com* table;
     port** ports;
-    bpdu bpdu;
+    bpdu* bpdu;
     mac addr_mac;
-    trame* file_trame;
-    size_t file_max_length;
-    size_t file_size;
+
+    size_t root_index;
 } bridge;
 
 
@@ -42,7 +44,9 @@ interface* bridge_get_free_interface(bridge* bd,machine* mach);
 
 void print_switch_table(const bridge* bd);
 
-void file_append(bridge * bd,trame trame);
-trame file_pop(bridge* bd);
-
+int retrieve_port(bridge* bd, interface* inter);
 void process_trame(bridge *bd,trame* trame,interface* input_port);
+void copy_bpdu(bpdu* machine1,bpdu* machine2);
+void recalculate_ports(bridge* br,bpdu* received_bpdu) ;
+
+void send_bdpu(bridge * br);

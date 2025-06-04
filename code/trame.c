@@ -29,7 +29,7 @@ char* to_string_message(const trame* tra, char* buffer){
             break;
         case BPDU:
             char str_bpdu[64];
-            to_string_bpdu(*((bpdu*)tra->message), str_bpdu);
+            to_string_bpdu(((bpdu*)tra->message), str_bpdu);
             sprintf(buffer, "BPDU: %s", str_bpdu);
             break;
     }

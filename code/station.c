@@ -11,8 +11,8 @@ void desinit_station(station *sta){
     sta->addr_ip = 0;
 };
 
-char* to_string_station(station* sta,char*  buffer){
-    return buffer;
-};
+// char* to_string_station(station* sta,char*  buffer){
+//     return buffer;
+// };
 
 
