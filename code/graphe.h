@@ -20,6 +20,8 @@ typedef struct graphe
     poids** matrice;
     sommet** sommets;
     int ordre;
+    size_t nbSwitch;
+    size_t nbStation;
 }graphe;
 
 void init_graphe(graphe *m,int nbSommet);

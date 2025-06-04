@@ -8,7 +8,9 @@
 void init_graphe(graphe *g, int nbSommet) {                                       
     g->matrice = (poids**)malloc(nbSommet * sizeof(poids*));                  
     g->sommets = (sommet**)malloc(nbSommet * sizeof(sommet*));                    
-    g->ordre = nbSommet;                                                       
+    g->ordre = nbSommet;           
+    g->nbSwitch =0;
+    g->nbStation=0;                                            
     if (g->matrice == NULL || g->sommets == NULL) {                           
         printf("Error malloc");                                                 
     }                                                                           
@@ -49,7 +51,9 @@ void desinit_graphe(graphe *g){
     }                       
                                                         
     free(g->matrice);                                                         
-    free(g->sommets);                                                           
+    free(g->sommets);   
+    g->nbStation =0;
+    g->nbSwitch = 0;                                                        
     g->matrice = NULL;                                                        
     g->sommets =NULL;      
     g = NULL;                                                     

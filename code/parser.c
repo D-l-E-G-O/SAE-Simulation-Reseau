@@ -74,6 +74,7 @@ void parse_file(graphe *g, char* ligne[]) {
             ipv4 ip = string_to_ipv4(ipAddr);
             init_station(sta,ip);
             init_machine(mach,(void*)sta,STATION,mac);
+            g->nbStation++;
         }
         else if(type == SWITCH) {
             char macAddr[18];
@@ -83,6 +84,7 @@ void parse_file(graphe *g, char* ligne[]) {
             mac mac = string_to_mac(macAddr);
             init_bridge(bd,nb_port,priorite, mac);
             init_machine(mach,(void*)bd,SWITCH,mac);
+            g->nbSwitch ++;
         }
 
         sommet * som = malloc(sizeof(sommet));
