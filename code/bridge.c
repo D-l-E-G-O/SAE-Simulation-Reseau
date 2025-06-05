@@ -2,58 +2,61 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
 void init_bridge(bridge* bd, size_t nb_ports, size_t priorite, mac addr_mac) {
     bd->nb_ports = nb_ports;
     bd->priorite = priorite;
     bd->addr_mac = addr_mac;
+
     bd->bpdu = (bpdu*)malloc(sizeof(bpdu));
     if (!bd->bpdu) return;
-    
     init_bpdu(bd->bpdu, priorite, addr_mac);
-    printf("Switch: MAC=%s, Ports=%zu, Priorite=%zu\n", 
-           to_string_mac(&addr_mac, (char[20]){0}), nb_ports, priorite);
-    
+
     bd->table = (com*)malloc(sizeof(com) * nb_ports);
     bd->table_length = 0;
     bd->max_table_length = nb_ports;
 
     bd->ports = (port**)calloc(nb_ports, sizeof(port*));
     bd->root_index = -1;
+
+    printf("Switch: MAC=%s, Ports=%zu, Priorite=%zu\n", 
+           to_string_mac(&addr_mac, (char[20]){0}), nb_ports, priorite);
 }
+
 
 void desinit_bridge(bridge* bd) {
     if (!bd) return;
 
     for (size_t i = 0; i < bd->nb_ports; i++) {
         if (bd->ports[i]) {
-            desinit_inter(bd->ports[i]->port);
-            bd->ports[i]->type = 0;
-            bd->ports[i]->type_changed=false;
-            free(bd->ports[i]->port);
+            if (bd->ports[i]->port) {
+                desinit_inter(bd->ports[i]->port);
+                free(bd->ports[i]->port);
+            }
+
+            if (bd->ports[i]->best_received && bd->ports[i]->best_received != bd->bpdu) {
+                desinit_bpdu(bd->ports[i]->best_received);
+                free(bd->ports[i]->best_received);
+            }
+
             free(bd->ports[i]);
-            bd->ports[i] = NULL;
         }
     }
 
     free(bd->ports);
-    bd->ports = NULL;
-
     desinit_bpdu(bd->bpdu);
     free(bd->bpdu);
-    bd->bpdu = NULL;
-
-
-
     free(bd->table);
-    bd->table = NULL;
 
+    bd->bpdu = NULL;
+    bd->ports = NULL;
+    bd->table = NULL;
+    bd->nb_ports = 0;
+    bd->root_index = -1;
     bd->table_length = 0;
     bd->max_table_length = 0;
-    bd->nb_ports = 0;
-    bd->root_index=-1;
-    
-
 }
+
 
 int check_if_in_com_table(bridge* bd, mac addr) {
     if (!bd || !bd->table) return -1;
@@ -103,7 +106,7 @@ interface* bridge_get_free_interface(bridge* bd, machine* mach) {
             if (!new_inter) return NULL;
 
             init_interface(new_inter, mach);
-            
+
             bd->ports[i] = malloc(sizeof(port));
             if (!bd->ports[i]) {
                 free(new_inter);
@@ -111,14 +114,19 @@ interface* bridge_get_free_interface(bridge* bd, machine* mach) {
             }
 
             bd->ports[i]->port = new_inter;
-            bd->ports[i]->type = DESIGNE; 
-            bd->ports[i]->type_changed=false;
+            bd->ports[i]->type = DESIGNE;
+            bd->ports[i]->type_changed = false;
+            bd->ports[i]->best_received = malloc(sizeof(bpdu));
+            if (bd->ports[i]->best_received)
+                copy_bpdu(bd->bpdu, bd->ports[i]->best_received);
+
             return new_inter;
         }
     }
 
-    return NULL; 
+    return NULL;
 }
+
 
 
 void print_switch_table(const bridge* bd) {
@@ -164,19 +172,17 @@ int retrieve_port(bridge* bd, interface* inter) {
 
 
 
+
+
 void process_trame(bridge *br, trame* tr, interface* input_port) {
     int input_index = retrieve_port(br, input_port);
-    if (input_index == -1) {
-        printf("Erreur : interface d'entrée non trouvée dans le bridge.\n");
-        return;
-    }
+    if (input_index == -1) return;
 
-    if (tr->type == PING) {
+    if (tr->type == PING &&br->ports[input_index]->type !=NONDESIGNE ) {
         int index = check_if_in_com_table(br, tr->dest);
-        if (index != -1) {
+        if (index != -1 ) {
             com* entry = &br->table[index];
             interface* out_inter = br->ports[entry->index_port]->port;
-
             if (out_inter != input_port) {
                 trame reply;
                 copy_trame(&reply, tr);
@@ -185,7 +191,9 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
             }
         } else {
             for (size_t i = 0; i < br->nb_ports; i++) {
-                if (br->ports[i] && (br->ports[i]->port != input_port&& br->ports[i]->type !=NONDESIGNE)) {
+                if (br->ports[i] && 
+                    br->ports[i]->port != input_port && 
+                    br->ports[i]->type != NONDESIGNE) {
                     trame reply;
                     copy_trame(&reply, tr);
                     send_data(br->ports[i]->port, &reply);
@@ -194,83 +202,97 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
             }
         }
     }
+    else if (tr->type == BPDU) {
+        bpdu* received = (bpdu*)tr->message;
+        port* pt = br->ports[input_index];
+        if (!pt) return;
 
-    if (tr->type == BPDU) {
-        bpdu* bp = (bpdu*)tr->message;
-        if (is_bpdu_better(br->bpdu,bp)) { 
-            int old_root = br->root_index;
+        bpdu adjusted = *received;
+        adjusted.cost += input_port->poids;
+        if (is_bpdu_better(&adjusted, br->bpdu)) {
+            desinit_bpdu(br->bpdu);
+            copy_bpdu(&adjusted, br->bpdu);
             br->root_index = input_index;
-            br->ports[input_index]->type = RACINE;
-            br->ports[input_index]->type_changed = true;
-            if (old_root != -1 && old_root != input_index) {
-                br->ports[old_root]->type = NONDESIGNE;
-                br->ports[old_root]->type_changed = true;
-            }
-            desinit_bpdu(br->bpdu);  
-            br->bpdu = (bpdu*)malloc(sizeof(bpdu));
-            if (!br->bpdu) return; 
-            copy_bpdu(bp, br->bpdu);
         }
-        recalculate_ports(br, bp);
+        if (pt->best_received) {
+            if (is_bpdu_better(received, pt->best_received)) {
+                desinit_bpdu(pt->best_received);
+                copy_bpdu(received, pt->best_received);
+            }
+        } else {
+            pt->best_received = malloc(sizeof(bpdu));
+            copy_bpdu(received, pt->best_received);
+        }
+
+        recalculate_ports(br);
+        desinit_trame(tr);
     }
 }
 
 
 
 
-void send_bdpu(bridge *br) {
-    if (!br || !br->bpdu || !br->ports) return;
+
+
+void recalculate_ports(bridge* br) {
+    if (!br || !br->bpdu) return;
 
     for (size_t i = 0; i < br->nb_ports; i++) {
-        if (br->ports[i] && br->ports[i]->type != NONDESIGNE && br->ports[i]->port) {
-            trame tr;
-            bpdu bp;
-            copy_bpdu(br->bpdu, &bp);
-            set_cost(&bp, bp.cost + br->ports[i]->port->poids);
-            init_trame(&tr, br->addr_mac, br->addr_mac, &bp, BPDU);
-            send_data(br->ports[i]->port, &tr);
-            desinit_trame(&tr);
-            desinit_bpdu(&bp);
-        }
-    }
-}
+        port* pt = br->ports[i];
+        if (!pt || !pt->port) continue;
 
-void recalculate_ports(bridge* br, bpdu* received_bpdu) {
-    if (!br || !received_bpdu) return;
-
-    for (size_t i = 0; i < br->nb_ports; i++) {
-        if (!br->ports[i] || !br->ports[i]->port) continue;
-
-        interface* inter = br->ports[i]->port;
-
-        if (inter->connected_to && inter->connected_to->machine->type != SWITCH) {
-            if (br->ports[i]->type != DESIGNE) {
-                br->ports[i]->type = DESIGNE;
-                br->ports[i]->type_changed = true;
+        if ((int)i == br->root_index) {
+            if (pt->type != RACINE) {
+                pt->type = RACINE;
+                pt->type_changed = true;
             }
             continue;
         }
 
-        if ((int)i == br->root_index) continue;
+        bpdu simulated;
+        copy_bpdu(br->bpdu, &simulated);
+        simulated.cost += pt->port->poids;
+        simulated.transmitting_id = br->addr_mac;
 
-        bpdu my_bpdu;
-        copy_bpdu(br->bpdu, &my_bpdu);
-        set_cost(&my_bpdu, my_bpdu.cost + inter->poids);
+        if (pt->best_received) {
+            bpdu adjusted_received = *(pt->best_received);
+            adjusted_received.cost += pt->port->poids;
 
-        bpdu* bp_received =received_bpdu;
-        if (!bp_received) {
-            desinit_bpdu(&my_bpdu);
-            continue;
+            if (is_bpdu_better(&adjusted_received, &simulated)) {
+                if (pt->type != NONDESIGNE) {
+                    pt->type = NONDESIGNE;
+                    pt->type_changed = true;
+                }
+            } else {
+                if (pt->type != DESIGNE) {
+                    pt->type = DESIGNE;
+                    pt->type_changed = true;
+                }
+            }
+        } else {
+            if (pt->type != DESIGNE) {
+                pt->type = DESIGNE;
+                pt->type_changed = true;
+            }
         }
+        desinit_bpdu(&simulated);
+    }
+}
 
-        bool should_block = is_bpdu_better(bp_received, &my_bpdu);
-        port_type new_type = should_block ? NONDESIGNE : DESIGNE;
+void send_bdpu(bridge* br) {
+    if (!br || !br->ports || !br->bpdu) return;
 
-        if (br->ports[i]->type != new_type) {
-            br->ports[i]->type = new_type;
-            br->ports[i]->type_changed = true;
-        }
+    for (size_t i = 0; i < br->nb_ports; i++) {
+        port* pt = br->ports[i];
+        if (!pt || pt->type == NONDESIGNE || !pt->port) continue;
 
-        desinit_bpdu(&my_bpdu);
+        bpdu out_bpdu;
+        copy_bpdu(br->bpdu, &out_bpdu);
+        out_bpdu.transmitting_id = br->addr_mac;
+        trame tr;
+        init_trame(&tr, br->addr_mac,  br->addr_mac, &out_bpdu, BPDU);
+        send_data(pt->port, &tr);
+        desinit_trame(&tr);
+        desinit_bpdu(&out_bpdu);
     }
 }

@@ -18,6 +18,7 @@ void init_bpdu(bpdu* bpdu, int16_t priorite, mac addr_mac){
 
 void desinit_bpdu(bpdu * bpdu){
     free(bpdu->root);
+    bpdu->transmitting_id =0;
     bpdu->root = NULL;
 }
 
@@ -25,12 +26,12 @@ void set_cost(bpdu* bpdu, size_t cost){
     bpdu->cost = cost;
 }
 
-void copy_bpdu(bpdu* source, bpdu* dest) {
-    init_bpdu(dest, source->root->priorite, source->root->addr_mac);
-    set_cost(dest, source->cost);
-    dest->transmitting_id = source->transmitting_id; 
+void copy_bpdu(bpdu* src, bpdu* dest) {
+    dest->root = malloc(sizeof(root_id));
+    memcpy(dest->root, src->root, sizeof(root_id));
+    dest->cost = src->cost;
+    memcpy(&dest->transmitting_id, &src->transmitting_id, sizeof(mac));
 }
-
 bool is_root_id_inferior_to(root_id* r1, root_id* r2){
     if (r1->priorite < r2->priorite || (r1->priorite == r2->priorite && is_mac_inferior_to(r1->addr_mac, r2->addr_mac))){
         return true;
@@ -64,7 +65,7 @@ char* to_string_bpdu(bpdu* bpdu, char* buffer) {
     char mac_root[20];
     char mac_transmitter[20];
     
-    sprintf(buffer, "[%s,%zu,%s]", 
+    sprintf(buffer, "[%s   ,  %zu   ,%s]", 
            to_string_mac(&bpdu->root->addr_mac, mac_root),
            bpdu->cost,
            to_string_mac(&bpdu->transmitting_id, mac_transmitter));

@@ -22,8 +22,6 @@ void simulate_stp(graphe* g) {
         printf("\n--- Itération %d ---\n", iterations + 1);
         for (size_t i = 0; i < nb_switch; i++) {
             bridge* br = (bridge*)g->sommets[i]->machine->machine;
-            printf("Switch %ld (%s): Envoi BPDU\n", i, 
-                   to_string_mac(&br->addr_mac, (char[20]){0}));
             send_bdpu(br);
         }
 
@@ -32,7 +30,6 @@ void simulate_stp(graphe* g) {
             for (size_t j = 0; j < br->nb_ports; j++) {
                 if (br->ports[j] && br->ports[j]->type_changed) {
                     changed = true;
-                    printf("on relance accause de :%d %d \n",i,j);
                     br->ports[j]->type_changed = false; 
                 }
             }
@@ -47,7 +44,7 @@ void simulate_stp(graphe* g) {
     } ;
 
     if (iterations == max_iterations) {
-        printf("\nAttention: limite d'itérations atteinte sans convergence\n");
+        printf("\nlimite d'itérations atteinte sans convergence\n");
     } else {
         printf("\nTopologie stable après %d itérations\n", iterations);
     }
@@ -93,6 +90,9 @@ void simulate_stp(graphe* g) {
 }
 
 int main(int argc, char const *argv[]) {
+
+     
+    
     printf("\n=== Récupération de la configuration réseau ===\n");
     getchar();
     
@@ -116,7 +116,9 @@ int main(int argc, char const *argv[]) {
     getchar();
     
     machine* station1 = g.sommets[7]->machine;
-    machine* station2 = g.sommets[8]->machine;
+    machine* station2 = g.sommets[14]->machine;
+    
+
     
     trame test_trame;
     size_t pong = 0;

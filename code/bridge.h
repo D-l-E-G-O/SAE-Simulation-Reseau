@@ -30,7 +30,7 @@ typedef struct bridge {
     bpdu* bpdu;
     mac addr_mac;
 
-    size_t root_index;
+    int root_index;
 } bridge;
 
 
@@ -47,6 +47,6 @@ void print_switch_table(const bridge* bd);
 int retrieve_port(bridge* bd, interface* inter);
 void process_trame(bridge *bd,trame* trame,interface* input_port);
 void copy_bpdu(bpdu* machine1,bpdu* machine2);
-void recalculate_ports(bridge* br,bpdu* received_bpdu) ;
+void recalculate_ports(bridge* br) ;
 
 void send_bdpu(bridge * br);

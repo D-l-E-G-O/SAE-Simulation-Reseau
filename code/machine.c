@@ -52,10 +52,11 @@ void send_trame(machine* sender, trame *tr, interface* input_port) {
         trame reply;
         copy_trame(&reply, tr); 
         send_data(sender->interface, &reply);
-        desinit_trame(&reply); 
+        desinit_trame(&reply);
     } else if (sender->type == SWITCH) {
-         bridge *br = (bridge*)sender->machine;
-         process_trame(br,tr, input_port);
+        bridge *br = (bridge*)sender->machine;
+        process_trame(br,tr, input_port);
+       
     }
 
 }

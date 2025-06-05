@@ -35,15 +35,14 @@ char* to_string_message(const trame* tra, char* buffer){
     }
     return buffer;
 }
-
-void desinit_trame(trame* tra){
-    switch(tra->type){
-        case PING:
-        case BPDU:
-            free(tra->message);
-            break;
+void desinit_trame(trame* tra) {
+    if (!tra) return;
+    if (tra->message) {
+        free(tra->message); 
+        tra->message = NULL;
     }
 }
+
 
 
 void copy_trame(trame* dest, const trame* src) {

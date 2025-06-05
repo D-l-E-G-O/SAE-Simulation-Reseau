@@ -11,13 +11,13 @@ DEPS := $(OBJS:.o=.d)
 INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
-CFLAGS ?= $(INC_FLAGS) -MMD -MP -O3
+CFLAGS ?= $(INC_FLAGS) -MMD -MP -O3 
 
 .PHONY: all run clean
 
 all: $(TARGET_DIR)/$(TARGET_EXEC)
 	@clear
-	@valgrind ./$(TARGET_DIR)/$(TARGET_EXEC)
+	@valgrind --leak-check=full --track-origins=yes ./$(TARGET_DIR)/$(TARGET_EXEC) 
 
 $(TARGET_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(MKDIR_P) $(dir $@)
