@@ -97,7 +97,7 @@ int main(int argc, char const *argv[]) {
     getchar();
     
     int MAX_LIGNES = 1024;
-    FILE* file = open_file("mylan.lan");
+    FILE* file = open_file("triangle.lan");
     if (!file) {
         perror("Erreur d'ouverture du fichier");
         return EXIT_FAILURE;
@@ -115,8 +115,8 @@ int main(int argc, char const *argv[]) {
     printf("\n=== Test d'envoi d'une trame entre machines ===\n");
     getchar();
     
-    machine* station1 = g.sommets[7]->machine;
-    machine* station2 = g.sommets[14]->machine;
+    machine* station1 = g.sommets[3]->machine;
+    machine* station2 = g.sommets[4]->machine;
     
 
     
