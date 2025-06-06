@@ -23,3 +23,4 @@ char* to_string_message(const trame* tra, char* buffer);
 
 void desinit_trame(trame* tra);
 
+void copy_trame(trame* dest, const trame* src);

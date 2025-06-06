@@ -22,19 +22,22 @@ void init_trame(trame * tra, mac source, mac dest, void* message, trame_type typ
 }
 
 
-char* to_string_message(const trame* tra, char* buffer){
-    switch(tra->type){
-        case PING:
+char* to_string_message(const trame* tra, char* buffer) {
+    switch (tra->type) {
+        case PING: {
             sprintf(buffer, "Ping: %zu", *(ping*)tra->message);
             break;
-        case BPDU:
+        }
+        case BPDU: {
             char str_bpdu[64];
             to_string_bpdu(((bpdu*)tra->message), str_bpdu);
             sprintf(buffer, "BPDU: %s", str_bpdu);
             break;
+        }
     }
     return buffer;
 }
+
 void desinit_trame(trame* tra) {
     if (!tra) return;
     if (tra->message) {

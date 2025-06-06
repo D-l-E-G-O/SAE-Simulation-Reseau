@@ -1,4 +1,5 @@
 #include <machine.h>
+#include "bridge.h"
 #include <stdlib.h>
 #include <stdio.h>
 

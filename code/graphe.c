@@ -1,4 +1,3 @@
-#pragma one                                                                     
 #include <graphe.h>                                                          
 #include <stdlib.h>                                                             
 #include <stdio.h>                                                              
@@ -30,12 +29,12 @@ void init_graphe(graphe *g, int nbSommet) {
 void init_sommet(sommet *s , int index,machine * machine){
     s->index = index;
     s->machine = machine;
-};
+}
 
 
 void add_sommet(graphe* g,sommet* sommet,int index){
     g->sommets[index] = sommet;
-};
+}
 
 
               
@@ -65,12 +64,12 @@ void desinit_sommet(sommet *s){
     desinit_machine(s->machine);
     free(s->machine);
     s->machine = NULL;
-};
+}
                                                                                                                                                             
                                                                                 
 void add_vertex(graphe *g, sommet a, sommet b, int poids){                                   
     g->matrice[a.index][b.index] = poids ;                                       
-};                                                                              
+}                                                                          
                                                                                 
                                                                   
                                                                                 

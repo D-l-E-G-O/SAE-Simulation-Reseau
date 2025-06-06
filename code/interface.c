@@ -1,13 +1,14 @@
-#include <interface.h>
+#include "interface.h"
+#include "machine.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-void init_interface(interface* inter, machine* machine) {
+void init_interface(interface* inter,struct machine* machine) {
     if (!inter) return;
     inter->machine = machine;
     inter->connected_to = NULL;
     inter->poids = -1;
-};
+}
 
 void desinit_inter(interface* inter){
     inter->machine = NULL;
@@ -23,7 +24,7 @@ void connect_two_interface(interface* a, interface* b, size_t poids){ //C'est co
        to_string_mac(&b->machine->addr_mac,  (char[20]){0}),
        poids
     );
-};
+}
 
 void send_data(interface *intf, void *tr) { //Ca envoie les données dans le "câble"
     if (intf->connected_to && intf->connected_to->machine) {

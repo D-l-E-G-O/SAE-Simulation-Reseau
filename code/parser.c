@@ -1,4 +1,3 @@
-#pragma one                                                                     
 #include "parser.h"                                                             
 #include <string.h>                                                             
 #include <stdlib.h>  
@@ -12,7 +11,7 @@ int MAX_LIGNE = 1024;
                                                                                 
 FILE* open_file(char * nameFile){                                               
     return fopen(nameFile,"r");                                                 
-};                                                                              
+}                                                                    
                                                                                 
 int read_file(FILE* file, char* lignes[]) {                                     
     if (file == NULL) {                                                         

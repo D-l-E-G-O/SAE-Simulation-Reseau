@@ -1,15 +1,10 @@
 #pragma once
-
 #include <stddef.h>
 #include <port.h>
-#include <interface.h>
 #include <adress.h>
-#include <machine.h>
 #include <trame.h>
-
-typedef struct interface interface;
-typedef struct machine machine;
-
+#include "interface.h" 
+#include "machine.h"   
 
 typedef struct port {
     interface* port;
@@ -17,8 +12,6 @@ typedef struct port {
     bool type_changed;
     bpdu* best_received;
 } port;
-
-
 
 typedef struct bridge {
     size_t nb_ports;
@@ -29,24 +22,18 @@ typedef struct bridge {
     port** ports;
     bpdu* bpdu;
     mac addr_mac;
-
     int root_index;
 } bridge;
-
-
-
 
 void init_bridge(bridge* bd, size_t nb_ports, size_t priorite, mac addr_mac);
 void desinit_bridge(bridge* bd);
 void add_to_com_table(bridge* bd, mac addr, interface* inter);
 int check_if_in_com_table(bridge* bd, mac addr);
-interface* bridge_get_free_interface(bridge* bd,machine* mach);
+interface* bridge_get_free_interface(bridge* bd, machine* mach);
 
 void print_switch_table(const bridge* bd);
-
 int retrieve_port(bridge* bd, interface* inter);
-void process_trame(bridge *bd,trame* trame,interface* input_port);
-void copy_bpdu(bpdu* machine1,bpdu* machine2);
-void recalculate_ports(bridge* br) ;
-
-void send_bdpu(bridge * br);
+void process_trame(bridge* bd, trame* trame, interface* input_port);
+void copy_bpdu(bpdu* machine1, bpdu* machine2);
+void recalculate_ports(bridge* br);
+void send_bdpu(bridge* br);

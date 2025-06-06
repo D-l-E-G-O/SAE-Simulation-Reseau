@@ -1,4 +1,5 @@
 #include "bridge.h"
+#include "trame.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -61,7 +62,7 @@ void desinit_bridge(bridge* bd) {
 int check_if_in_com_table(bridge* bd, mac addr) {
     if (!bd || !bd->table) return -1;
 
-    for (int i = 0; i < bd->table_length; i++) {
+    for (size_t i = 0; i < bd->table_length; i++) {
         if (memcmp(&bd->table[i].addr_mac, &addr, sizeof(mac)) == 0) {
             return i;
         }
