@@ -111,12 +111,36 @@ int main(int argc, char const *argv[]) {
     // Simulation du protocole STP
     simulate_stp(&g);
 
+
+    printf("======ENVOIE DE TRAME======\n");
+    for(int i =0;i<g.ordre;i++){
+        printf("[%d] %s \n",i,to_string_mac(&g.sommets[i]->machine->addr_mac,(char[50]){0}));
+    }
+    int index_machine1 = 0;
+    int index_machine2 = 0;
+
+    printf("Choisissez la machine qui enverra la trame : ");
+    if (scanf("%d", &index_machine1) != 1) {
+        fprintf(stderr, "Erreur : entrée invalide.\n");
+        return 1;
+    }
+
+    printf("Choisissez la destination de la trame : ");
+    if (scanf("%d", &index_machine2) != 1) {
+        fprintf(stderr, "Erreur : entrée invalide.\n");
+        return 1;
+    }
+
+    printf("La machine %d enverra une trame à la machine %d\n", index_machine1, index_machine2);
+    getchar();
+
+
     //Test de communication
     printf("\n=== Test d'envoi d'une trame entre machines ===\n");
     getchar();
     
-    machine* station1 = g.sommets[3]->machine;
-    machine* station2 = g.sommets[4]->machine;
+    machine* station1 = g.sommets[index_machine1]->machine;
+    machine* station2 = g.sommets[index_machine2]->machine;
     
 
     
