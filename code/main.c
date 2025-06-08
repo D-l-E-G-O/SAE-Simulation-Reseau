@@ -90,6 +90,25 @@ void simulate_stp(graphe* g) {
     }
 }
 
+void vider_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF); // consomme jusqu’à la fin de ligne
+}
+
+void demande_entier(int min, int max, int* entier) {
+    int res;
+    do {
+        printf("\nEntrez un entier (%d à %d) : ", min, max);
+        res = scanf("%d", entier);
+        if (res != 1) {
+            fprintf(stderr, "Erreur : entrée invalide.\n");
+            vider_buffer();
+        } else if (*entier < min || *entier > max) {
+            printf("Erreur : valeur hors intervalle.\n");
+        }
+    } while (res != 1 || *entier < min || *entier > max);
+}
+
 void quitter(graphe* g, FILE* file, char* lignes[], int nb_lignes){
     printf("\n===== Libération de la mémoire =====\n");
     desinit_graphe(g);
@@ -101,18 +120,14 @@ void envoyer_trame(graphe* g){
     for(int i =0;i<g->ordre;i++){
         printf("[%d] %s \n",i,to_string_mac(&(g->sommets[i]->machine->addr_mac),(char[50]){0}));
     }
-    int index_machine1 = 0;
-    int index_machine2 = 0;
+    int index_machine1 = -1;
+    int index_machine2 = -1;
 
     printf("Choisissez la machine qui enverra la trame : ");
-    while(scanf("%d", &index_machine1) != 1){
-        fprintf(stderr, "Erreur : entrée invalide.\n");
-    }
+    demande_entier(0, g->ordre-1, &index_machine1);
 
     printf("Choisissez la destination de la trame : ");
-    while(scanf("%d", &index_machine2) != 1){
-        fprintf(stderr, "Erreur : entrée invalide.\n");
-    }
+    demande_entier(0, g->ordre-1, &index_machine2);
 
     printf("La machine %d enverra une trame à la machine %d\n", index_machine1, index_machine2);
 
@@ -141,14 +156,10 @@ void afficher_table(graphe* g){
         for(int i =0;i<g->ordre;i++){
             printf("[%d] %s \n",i,to_string_mac(&(g->sommets[i]->machine->addr_mac),(char[50]){0}));
         }
-        int index_switch = 0;
+        int index_switch = -1;
         printf("Choisissez le switch: ");
-        if (scanf("%d", &index_switch) != 1) {
-            fprintf(stderr, "Erreur : entrée invalide.\n");
-        }
-        else{
-            print_switch_table((bridge*)g->sommets[index_switch]->machine->machine);
-        }
+        demande_entier(0, g->ordre-1, &index_switch);
+        print_switch_table((bridge*)g->sommets[index_switch]->machine->machine);
     }
 }
 
@@ -175,9 +186,7 @@ int main(int argc, char const *argv[]) {
         printf("1 - Envoyer une trame\n");
         printf("2 - Afficher la table de commutation\n");
         printf("3 - Simuler le protocole STP\n");
-        while(scanf("%d", &choix) != 1){
-            fprintf(stderr, "Erreur : entrée invalide.\n");
-        }
+        demande_entier(0, 3, &choix);
         switch(choix){
             case 1:
                 envoyer_trame(&g);

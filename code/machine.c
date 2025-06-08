@@ -66,7 +66,7 @@ bool is_it_for_me_question_mark(machine *mach, trame* t) {
     return mac_equals(mach->addr_mac, t->dest);
 }
 
-void receive_tram(machine* receiver, trame* tr, interface* input_port) {
+void receive_trame(machine* receiver, trame* tr, interface* input_port) {
     char mac_buffer_self[20]; 
     char mac_buffer_src[20];
     char mac_buffer_dest[20];
