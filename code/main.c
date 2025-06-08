@@ -117,25 +117,31 @@ void quitter(graphe* g, FILE* file, char* lignes[], int nb_lignes){
 
 void envoyer_trame(graphe* g){
     printf("\n===== Envoi de trame =====\n");
+    int index[g->ordre];
+    int nb = 0;
     for(int i =0;i<g->ordre;i++){
-        printf("[%d] %s \n",i,to_string_mac(&(g->sommets[i]->machine->addr_mac),(char[50]){0}));
+        if (g->sommets[i]->machine->type == STATION){
+            printf("[%d] %s \n",nb,to_string_mac(&(g->sommets[i]->machine->addr_mac),(char[50]){0}));
+            index[nb] = i;
+            nb++;
+        }
     }
     int index_machine1 = -1;
     int index_machine2 = -1;
 
     printf("Choisissez la machine qui enverra la trame : ");
-    demande_entier(0, g->ordre-1, &index_machine1);
+    demande_entier(0, nb, &index_machine1);
 
     printf("Choisissez la destination de la trame : ");
-    demande_entier(0, g->ordre-1, &index_machine2);
+    demande_entier(0, nb, &index_machine2);
 
     printf("La machine %d enverra une trame à la machine %d\n", index_machine1, index_machine2);
 
     printf("\n===== Envoi d'une trame entre machines =====\n");
     getchar();
     
-    machine* station1 = g->sommets[index_machine1]->machine;
-    machine* station2 = g->sommets[index_machine2]->machine;
+    machine* station1 = g->sommets[index[index_machine1]]->machine;
+    machine* station2 = g->sommets[index[index_machine2]]->machine;
     
     trame test_trame;
     size_t pong = 0;
@@ -153,13 +159,19 @@ void envoyer_trame(graphe* g){
 void afficher_table(graphe* g){
     printf("\n===== Affichage de la Table de commutation =====\n");
     if (g->ordre > 0) {
+        int index[g->ordre];
+        int nb = 0;
         for(int i =0;i<g->ordre;i++){
-            printf("[%d] %s \n",i,to_string_mac(&(g->sommets[i]->machine->addr_mac),(char[50]){0}));
+            if (g->sommets[i]->machine->type == SWITCH){
+                printf("[%d] %s \n",nb,to_string_mac(&(g->sommets[i]->machine->addr_mac),(char[50]){0}));
+                index[nb] = i;
+                nb++;
+            }
         }
         int index_switch = -1;
         printf("Choisissez le switch: ");
-        demande_entier(0, g->ordre-1, &index_switch);
-        print_switch_table((bridge*)g->sommets[index_switch]->machine->machine);
+        demande_entier(0, nb, &index_switch);
+        print_switch_table((bridge*)g->sommets[index[index_switch]]->machine->machine);
     }
 }
 
