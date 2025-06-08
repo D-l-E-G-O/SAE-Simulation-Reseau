@@ -56,7 +56,7 @@ void parse_file(graphe *g, char* ligne[]) {
     size_t nb_machine = 0;
     size_t nb_connexion = 0;
     sscanf(ligne[0], "%zu %zu", &nb_machine, &nb_connexion);
-    printf("nb machine : %zu nb connexion : %zu\n", nb_machine, nb_connexion);
+    printf("Nombre de machines : %zu \nNombre de connexions : %zu\n", nb_machine, nb_connexion);
     init_graphe(g,nb_machine);
     for(size_t i = 1; i <= nb_machine; i++) {
         size_t type;
