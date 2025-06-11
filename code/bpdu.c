@@ -4,12 +4,12 @@
 #include <stdlib.h>
 
 
-void init_root_id(root_id* root_id, int16_t priorite, mac addr_mac){
+void init_root_id(root_id* root_id, size_t priorite, mac addr_mac){
     root_id->priorite = priorite;
     root_id->addr_mac = addr_mac;
 }
 
-void init_bpdu(bpdu* bpdu, int16_t priorite, mac addr_mac){
+void init_bpdu(bpdu* bpdu, size_t priorite, mac addr_mac){
     bpdu->root = (root_id*) malloc(sizeof(root_id));
     init_root_id(bpdu->root, priorite, addr_mac);
     bpdu->cost = 0;
@@ -66,10 +66,27 @@ char* to_string_bpdu(bpdu* bpdu, char* buffer) {
     char mac_root[20];
     char mac_transmitter[20];
     
-    sprintf(buffer, "[%s   ,  %zu   ,%s]", 
+    sprintf(buffer, "[%d + %s   ,  %zu   ,%s]", 
+            bpdu->root->priorite,
            to_string_mac(&bpdu->root->addr_mac, mac_root),
            bpdu->cost,
            to_string_mac(&bpdu->transmitting_id, mac_transmitter));
     
     return buffer;
+}
+
+
+
+void afficher_bpdu(bpdu* b) {
+    if (!b || !b->root) {
+        printf("BPDU invalide.\n");
+        return;
+    }
+
+    char buffer[100];  
+    if (to_string_bpdu(b, buffer)) {
+        printf("BPDU: %s\n", buffer);
+    } else {
+        printf("Erreur lors de la conversion du BPDU en chaîne.\n");
+    }
 }

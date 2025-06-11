@@ -214,7 +214,9 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
         if (is_bpdu_better(received, br->bpdu)) {
             desinit_bpdu(br->bpdu);
             copy_bpdu(received, br->bpdu);
+            br->bpdu->cost+=pt->port->poids;
             br->root_index = input_index;
+
         }
         if (pt->best_received) {
             if (is_bpdu_better(received, pt->best_received)) {
@@ -253,28 +255,31 @@ void recalculate_ports(bridge* br) {
 
         bpdu simulated;
         copy_bpdu(br->bpdu, &simulated);
-        simulated.cost += pt->port->poids;
+        //simulated.cost += pt->port->poids;
         simulated.transmitting_id = br->addr_mac;
 
         if (pt->best_received) {
             bpdu adjusted_received = *(pt->best_received);
-            adjusted_received.cost += pt->port->poids;
+            //adjusted_received.cost += pt->port->poids;
+
+
 
             if (is_bpdu_better(&adjusted_received, &simulated)) {
                 if (pt->type != NONDESIGNE) {
                     pt->type = NONDESIGNE;
                     pt->type_changed = true;
+                    printf("je change \n");
                 }
             } else {
                 if (pt->type != DESIGNE) {
                     pt->type = DESIGNE;
                     pt->type_changed = true;
+                    printf("je change \n");
                 }
             }
         } else {
             if (pt->type != DESIGNE) {
                 pt->type = DESIGNE;
-                pt->type_changed = true;
             }
         }
         desinit_bpdu(&simulated);

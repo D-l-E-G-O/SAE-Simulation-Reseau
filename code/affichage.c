@@ -12,7 +12,7 @@ void simulate_stp(graphe* g) {
     printf("Nombre de switches: %ld\n", nb_switch);
 
     int iterations = 0;
-    const int max_iterations = 10;
+    const int max_iterations = 100;
     bool changed=true;
 
     while (changed){
@@ -24,7 +24,9 @@ void simulate_stp(graphe* g) {
         }
 
         for (size_t i = 0; i < nb_switch; i++) {
+            
             bridge* br = (bridge*)g->sommets[i]->machine->machine;
+           
             for (size_t j = 0; j < br->nb_ports; j++) {
                 if (br->ports[j] && br->ports[j]->type_changed) {
                     changed = true;

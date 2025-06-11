@@ -13,9 +13,9 @@ typedef struct bpdu {
     mac  transmitting_id;
 }bpdu;
 
-void init_root_id(root_id* root_id, int16_t priorite, mac addr_mac);
+void init_root_id(root_id* root_id, size_t priorite, mac addr_mac);
 
-void init_bpdu(bpdu* bpdu, int16_t priorite, mac addr_mac);
+void init_bpdu(bpdu* bpdu, size_t priorite, mac addr_mac);
 
 void desinit_bpdu(bpdu * bpdu);
 void set_transmit(bpdu* tochange,mac addr);
@@ -32,3 +32,4 @@ char* to_string_bpdu(bpdu *bpdu, char* buffer);
 size_t to_int_string_bpdu(char* string_bpdu);
 
 char* to_string_int_bpdu(size_t int_bpdu, char* buffer);
+
