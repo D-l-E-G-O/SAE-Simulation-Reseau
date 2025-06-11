@@ -50,16 +50,16 @@ void simulate_stp(graphe* g) {
     printf("\nÉtat final des ports:\n");
     for (size_t i = 0; i < nb_switch; i++) {
         bridge* br = (bridge*)g->sommets[i]->machine->machine;
-        printf("Switch %ld (%s):\n", i, to_string_mac(&br->addr_mac, (char[20]){0}));
+        printf("Switch %ld (\033[33m%s\033[0m):\n", i, to_string_mac(&br->addr_mac, (char[20]){0}));
         for (size_t j = 0; j < br->nb_ports; j++) {
             if (br->ports[j] && br->ports[j]->port) {
                 interface* inter = br->ports[j]->port;
                 printf("  Port %ld [", j);
                 
                 switch (br->ports[j]->type) {
-                    case RACINE: printf("RACINE]     "); break;
-                    case DESIGNE: printf("DESIGNE]    "); break;
-                    case NONDESIGNE: printf("NON-DESIGNE]"); break;
+                    case RACINE: printf("\033[32mRACINE\033[0m]     "); break;
+                    case DESIGNE: printf("\033[34mDESIGNE\033[0m]    "); break;
+                    case NONDESIGNE: printf("\033[31mNON-DESIGNE\033[0m]"); break;
                     default: printf("INCONNU]    ");
                 }
                 
@@ -69,7 +69,7 @@ void simulate_stp(graphe* g) {
                     machine* connected_machine = inter->connected_to->machine;
                     if (connected_machine->type == SWITCH) {
                         bridge* connected_br = (bridge*)connected_machine->machine;
-                        printf("Switch  %p (MAC: %s)", 
+                        printf("Switch  %p (MAC: \033[33m%s\033[0m)", 
                             (void*)connected_machine,
                             to_string_mac(&connected_br->addr_mac, (char[20]){0}));
                     } else {
