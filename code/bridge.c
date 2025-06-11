@@ -209,14 +209,18 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
         bpdu* received = (bpdu*)tr->message;
         port* pt = br->ports[input_index];
         if (!pt) return;
-
-
-        if (is_bpdu_better(received, br->bpdu)) {
+        bpdu current_adjusted;
+        copy_bpdu(br->bpdu, &current_adjusted);
+        
+        if (br->root_index != -1) {
+            port* root_port = br->ports[br->root_index];
+            current_adjusted.cost -= root_port->port->poids;
+        }
+        if (is_bpdu_better(received, &current_adjusted)) {
             desinit_bpdu(br->bpdu);
             copy_bpdu(received, br->bpdu);
-            br->bpdu->cost+=pt->port->poids;
+            br->bpdu->cost += pt->port->poids;
             br->root_index = input_index;
-
         }
         if (pt->best_received) {
             if (is_bpdu_better(received, pt->best_received)) {
@@ -227,7 +231,7 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
             pt->best_received = malloc(sizeof(bpdu));
             copy_bpdu(received, pt->best_received);
         }
-
+         desinit_bpdu(&current_adjusted);
         recalculate_ports(br);
         desinit_trame(tr);
     }
@@ -255,12 +259,12 @@ void recalculate_ports(bridge* br) {
 
         bpdu simulated;
         copy_bpdu(br->bpdu, &simulated);
-        //simulated.cost += pt->port->poids;
+        simulated.cost += pt->port->poids;
         simulated.transmitting_id = br->addr_mac;
 
         if (pt->best_received) {
             bpdu adjusted_received = *(pt->best_received);
-            //adjusted_received.cost += pt->port->poids;
+            adjusted_received.cost += pt->port->poids;
 
 
 
