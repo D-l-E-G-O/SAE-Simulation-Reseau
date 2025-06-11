@@ -46,12 +46,13 @@ bool root_id_equals(root_id* r1, root_id* r2){
 }
 
 bool is_bpdu_better(bpdu* received, bpdu* current) {
-    if (!root_id_equals(received->root, current->root)) {
-        return is_root_id_inferior_to(received->root, current->root);
-    }
-    if (received->cost != current->cost) {
-        return received->cost < current->cost;
-    }
+    if (!received || !current || !received->root || !current->root) return false;
+    if (received->root->priorite < current->root->priorite) return true;
+    if (received->root->priorite > current->root->priorite) return false;
+    if (is_mac_inferior_to(received->root->addr_mac, current->root->addr_mac)) return true;
+    if (is_mac_inferior_to(current->root->addr_mac, received->root->addr_mac)) return false;
+    if (received->cost < current->cost) return true;
+    if (received->cost > current->cost) return false;
     return is_mac_inferior_to(received->transmitting_id, current->transmitting_id);
 }
 
@@ -70,28 +71,5 @@ char* to_string_bpdu(bpdu* bpdu, char* buffer) {
            bpdu->cost,
            to_string_mac(&bpdu->transmitting_id, mac_transmitter));
     
-    return buffer;
-}
-
-size_t to_int_string_bpdu(char* string_bpdu){
-    size_t n = strlen(string_bpdu);
-    if (n == 0) return 0;
-    size_t int_bpdu = string_bpdu[0];
-    for(size_t i=1; i<n; i++){
-        int_bpdu = (int_bpdu<<8 )+ string_bpdu[i];
-    }
-    return int_bpdu;
-}
-
-char* to_string_int_bpdu(size_t int_bpdu, char* buffer){
-    size_t nb_octets = 0;
-    while(int_bpdu >> 8*nb_octets != 0){
-        nb_octets++;
-    }
-    uint8_t masque = 15; //1 octet binaire remplit avec des 1;
-    for(size_t i=nb_octets; i>0; i--){
-        buffer[i] = int_bpdu & masque;
-        masque <<= 8;
-    }
     return buffer;
 }

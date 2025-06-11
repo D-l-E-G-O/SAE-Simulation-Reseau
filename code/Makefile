@@ -17,7 +17,7 @@ CFLAGS ?= $(INC_FLAGS) -MMD -MP -O3 -Wall -Wextra -Wno-unused-parameter -Werror 
 
 all: $(TARGET_DIR)/$(TARGET_EXEC)
 	@clear
-	@valgrind --leak-check=full --track-origins=yes ./$(TARGET_DIR)/$(TARGET_EXEC) 
+	@valgrind --leak-check=full --track-origins=yes ./$(TARGET_DIR)/$(TARGET_EXEC) $(ARGS)
 	@make clean
 
 $(TARGET_DIR)/$(TARGET_EXEC): $(OBJS)

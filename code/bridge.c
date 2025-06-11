@@ -192,15 +192,17 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
             }
         } else {
             for (size_t i = 0; i < br->nb_ports; i++) {
-                if (br->ports[i] && 
-                    br->ports[i]->port != input_port && 
-                    br->ports[i]->type != NONDESIGNE) {
+                if (br->ports[i] ){
+                if( br->ports[i]->port != input_port) {
+                    
+                if(br->ports[i]->type != NONDESIGNE) {
                     trame reply;
                     copy_trame(&reply, tr);
                     send_data(br->ports[i]->port, &reply);
                     desinit_trame(&reply); 
                 }
-            }
+            }}
+        }
         }
     }
     else if (tr->type == BPDU) {
@@ -208,11 +210,10 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
         port* pt = br->ports[input_index];
         if (!pt) return;
 
-        bpdu adjusted = *received;
-        adjusted.cost += input_port->poids;
-        if (is_bpdu_better(&adjusted, br->bpdu)) {
+
+        if (is_bpdu_better(received, br->bpdu)) {
             desinit_bpdu(br->bpdu);
-            copy_bpdu(&adjusted, br->bpdu);
+            copy_bpdu(received, br->bpdu);
             br->root_index = input_index;
         }
         if (pt->best_received) {
