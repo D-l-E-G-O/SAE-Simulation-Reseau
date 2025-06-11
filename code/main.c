@@ -2,14 +2,15 @@
 #include <stdlib.h>
 #include <affichage.h>
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char *argv[]) {
     printf("\n===== Récupération de la configuration réseau =====\n");
     getchar();
     
     int MAX_LIGNES = 1024;
-    FILE* file = open_file("triangle.lan");
+    FILE* file = open_file(argv[1]);
     if (!file) {
-        perror("Erreur d'ouverture du fichier");
+        perror("Erreur d'ouverture du fichier\n");
+        printf("Pour lancer: make run fichier=<nom du fichier>\n");
         return EXIT_FAILURE;
     }
 

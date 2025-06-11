@@ -15,19 +15,24 @@ CFLAGS ?= $(INC_FLAGS) -MMD -MP -O3 -Wall -Wextra -Wno-unused-parameter -Werror 
 
 .PHONY: all run clean
 
+# Compilation seulement
 all: $(TARGET_DIR)/$(TARGET_EXEC)
+
+# Exécution avec argument fichier
+run: all
 	@clear
-	@valgrind --leak-check=full --track-origins=yes ./$(TARGET_DIR)/$(TARGET_EXEC) $(ARGS)
+	@valgrind --leak-check=full --track-origins=yes ./$(TARGET_DIR)/$(TARGET_EXEC) $(fichier)
 	@make clean
 
+# Génération de l'exécutable
 $(TARGET_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(MKDIR_P) $(dir $@)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 
+# Compilation des .c
 $(BUILD_DIR)/%.c.o: %.c
 	$(MKDIR_P) $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
-
 
 clean:
 	$(RM) -r $(BUILD_DIR) $(TARGET_DIR)
