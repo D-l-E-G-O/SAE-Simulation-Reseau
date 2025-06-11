@@ -57,19 +57,19 @@ void simulate_stp(graphe* g) {
                 printf("  Port %ld [", j);
                 
                 switch (br->ports[j]->type) {
-                    case RACINE: printf("RACINE"); break;
-                    case DESIGNE: printf("DESIGNE"); break;
-                    case NONDESIGNE: printf("NONDESIGNE"); break;
-                    default: printf("INCONNU");
+                    case RACINE: printf("RACINE]     "); break;
+                    case DESIGNE: printf("DESIGNE]    "); break;
+                    case NONDESIGNE: printf("NON-DESIGNE]"); break;
+                    default: printf("INCONNU]    ");
                 }
                 
-                printf("] -> Connecté à: ");
+                printf(" -> Connecté à: ");
                 
                 if (inter->connected_to) {
                     machine* connected_machine = inter->connected_to->machine;
                     if (connected_machine->type == SWITCH) {
                         bridge* connected_br = (bridge*)connected_machine->machine;
-                        printf("Switch %p (MAC: %s)", 
+                        printf("Switch  %p (MAC: %s)", 
                             (void*)connected_machine,
                             to_string_mac(&connected_br->addr_mac, (char[20]){0}));
                     } else {

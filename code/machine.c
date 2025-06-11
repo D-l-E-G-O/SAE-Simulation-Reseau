@@ -16,10 +16,11 @@ void init_machine(machine* machine, void* machine_pointer, type type, mac addr) 
                br->priorite);
         machine->interface = malloc(sizeof(interface));
     } else {
-        char bufferIP[1024];
+        char bufferMAC[512];
+        char bufferIP[256];
         station *sta = (station *)(machine->machine);
         printf("Station: MAC=%s, IP=%s\n",
-               to_string_mac(&addr, bufferIP),
+               to_string_mac(&addr, bufferMAC),
                to_string_ipv4(&sta->addr_ip, bufferIP));
         machine->interface = malloc(sizeof(interface));
         if (!machine->interface) {
