@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 void init_trame(trame * tra, mac source, mac dest, void* message, trame_type type){
+    // Procédure qui initialise une trame.
     tra->dest = dest;
     tra->source = source;
     tra->type = type;
@@ -23,6 +24,7 @@ void init_trame(trame * tra, mac source, mac dest, void* message, trame_type typ
 
 
 char* to_string_message(const trame* tra, char* buffer) {
+    // Fonction qui convertit le contenu de la trame en chaine de caractères et la renvoie.
     switch (tra->type) {
         case PING: {
             sprintf(buffer, "Ping: %zu", *(ping*)tra->message);
@@ -39,6 +41,7 @@ char* to_string_message(const trame* tra, char* buffer) {
 }
 
 void desinit_trame(trame* tra) {
+    // Procédure qui libère la mémoire allouée par la trame.
     if (!tra) return;
     if (tra->message) {
         free(tra->message); 
@@ -46,8 +49,7 @@ void desinit_trame(trame* tra) {
     }
 }
 
-
-
 void copy_trame(trame* dest, const trame* src) {
+    // Procédure qui effectue une copie profonde de la trame source dans la trame destination.
     init_trame(dest, src->source, src->dest, src->message, src->type);
 }

@@ -9,11 +9,14 @@
 int MAX_LIGNE_SIZE = 1024;                                                           
 int MAX_LIGNE = 1024;                                                          
                                                                                 
-FILE* open_file(char * nameFile){                                               
+FILE* open_file(char * nameFile){     
+    // Fonction qui retourne le fichier choisi ouvert en mode lecture.                                    
     return fopen(nameFile,"r");                                                 
 }                                                                    
                                                                                 
-int read_file(FILE* file, char* lignes[]) {                                     
+int read_file(FILE* file, char* lignes[]) { 
+    /* Fonction qui lit le fichier tout en remplissant le tableau de chaines de caractères représentant le texte du fichier,
+    puis retourne le nombre de lignes. */                                    
     if (file == NULL) {                                                         
         return -1;                                                              
     }                                                                           
@@ -38,6 +41,7 @@ int read_file(FILE* file, char* lignes[]) {
 
 
 int close_file(FILE* file, char* lignes[], int nb_lignes) {
+    // Fonction qui ferme le fichier et libère la mémoire allouée, puis renvoie 0 si tout s'est bien passé.
     if (file != NULL) {
         fclose(file);
     }
@@ -53,6 +57,7 @@ int close_file(FILE* file, char* lignes[], int nb_lignes) {
 }                                                                    
                                                                                 
 void parse_file(graphe *g, char* ligne[]) {
+    // Procédure qui traduit le contenu du fichier et remplit le graphe.
     size_t nb_machine = 0;
     size_t nb_connexion = 0;
     sscanf(ligne[0], "%zu %zu", &nb_machine, &nb_connexion);

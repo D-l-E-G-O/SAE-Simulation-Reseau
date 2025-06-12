@@ -6,6 +6,7 @@
 #include <bridge.h>
 
 void simulate_stp(graphe* g) {
+    // Procédure qui simule le spanning tree protocol et affiche le résultat.
     printf("\n====== Simulation STP =====\n");
     getchar();
     size_t nb_switch = g->nbSwitch;
@@ -90,11 +91,13 @@ void simulate_stp(graphe* g) {
 }
 
 void vider_buffer() {
+    // Procédure qui vide le buffer de la console.
     int c;
     while ((c = getchar()) != '\n' && c != EOF); // consomme jusqu’à la fin de ligne
 }
 
 void demande_entier(int min, int max, int* entier) {
+    // Procédure qui demande d'entrer un entier.
     int res;
     do {
         printf("\nEntrez un entier (%d à %d) : ", min, max);
@@ -109,12 +112,14 @@ void demande_entier(int min, int max, int* entier) {
 }
 
 void quitter(graphe* g, FILE* file, char* lignes[], int nb_lignes){
+    // Procédure qui libère toute la mémoire allouée et ferme le fichier de configuration avant de stopper le programme.
     printf("\n===== Libération de la mémoire =====\n");
     desinit_graphe(g);
     close_file(file, lignes, nb_lignes);
 }
 
 void envoyer_trame(graphe* g){
+    // Procédure qui envoie une trame (ping) entre 2 machines choisies par l'utilisateur.
     printf("\n===== Envoi de trame =====\n");
     int index[g->ordre];
     int nb = 0;
@@ -156,6 +161,7 @@ void envoyer_trame(graphe* g){
 }
 
 void afficher_table(graphe* g){
+    // Procédure qui affiche la table de commmutation d'un switch choisi par l'utilisateur.
     printf("\n===== Affichage de la Table de commutation =====\n");
     if (g->ordre > 0) {
         int index[g->ordre];

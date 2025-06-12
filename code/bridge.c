@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 void init_bridge(bridge* bd, size_t nb_ports, size_t priorite, mac addr_mac) {
+    // Procédure qui initialise un switch (bridge).
     bd->nb_ports = nb_ports;
     bd->priorite = priorite;
     bd->addr_mac = addr_mac;
@@ -26,6 +27,7 @@ void init_bridge(bridge* bd, size_t nb_ports, size_t priorite, mac addr_mac) {
 
 
 void desinit_bridge(bridge* bd) {
+    // Procédure qui libère la mémoire allouée par le switch.
     if (!bd) return;
 
     for (size_t i = 0; i < bd->nb_ports; i++) {
@@ -60,6 +62,9 @@ void desinit_bridge(bridge* bd) {
 
 
 int check_if_in_com_table(bridge* bd, mac addr) {
+    /* Fonction qui retourne l'index du switch ayant l'addresse mac 'addr' dans la table de commutation du switch 'bd', 
+    retourne -1 si on ne trouve pas de correspondance.
+    */
     if (!bd || !bd->table) return -1;
 
     for (size_t i = 0; i < bd->table_length; i++) {
@@ -71,6 +76,7 @@ int check_if_in_com_table(bridge* bd, mac addr) {
 }
 
 void add_to_com_table(bridge* bd, mac addr, interface* inter) {
+    // Procédure qui ajoute l'addresse mac dans la table de commutation du switch.
     if (!bd || !inter) return;
     if (check_if_in_com_table(bd, addr) != -1) return;
 
@@ -99,6 +105,8 @@ void add_to_com_table(bridge* bd, mac addr, interface* inter) {
 }
 
 interface* bridge_get_free_interface(bridge* bd, machine* mach) {
+    /* Fonction qui crée puis retourne une interface sur le premier port vide du switch que l'on trouve,
+    retourne NULL si tous les ports sont occupés. */
     if (!bd) return NULL;
 
     for (size_t i = 0; i < bd->nb_ports; i++) {
@@ -131,6 +139,7 @@ interface* bridge_get_free_interface(bridge* bd, machine* mach) {
 
 
 void print_switch_table(const bridge* bd) {
+    // Procédure qui affiche la table de commutation du switch à l'écran.
     if (!bd || !bd->table) {
         printf("Table de commutation vide ou bridge invalide.\n");
         return;
@@ -158,6 +167,7 @@ void print_switch_table(const bridge* bd) {
 
 
 int retrieve_port(bridge* bd, interface* inter) {
+    // Fonction qui retourne l'index du port qui est associé à l'interface, retourne -1 si on ne trouve pas de correspondance.
     if (!bd || !inter) return -1;
 
     for (size_t i = 0; i < bd->nb_ports; i++) {
@@ -171,11 +181,8 @@ int retrieve_port(bridge* bd, interface* inter) {
 
 
 
-
-
-
-
 void process_trame(bridge *br, trame* tr, interface* input_port) {
+    // Procédure qui gère le traitement d'une trame par le switch.
     int input_index = retrieve_port(br, input_port);
     if (input_index == -1) return;
 
@@ -223,10 +230,8 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
             br->root_index = input_index;
         }
         if (pt->best_received) {
-            if (is_bpdu_better(received, pt->best_received)) {
-                desinit_bpdu(pt->best_received);
-                copy_bpdu(received, pt->best_received);
-            }
+            desinit_bpdu(pt->best_received);
+            copy_bpdu(received, pt->best_received);
         } else {
             pt->best_received = malloc(sizeof(bpdu));
             copy_bpdu(received, pt->best_received);
@@ -238,11 +243,8 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
 }
 
 
-
-
-
-
 void recalculate_ports(bridge* br) {
+    // Procédure qui met à jour le statut des ports du switch.
     if (!br || !br->bpdu) return;
 
     for (size_t i = 0; i < br->nb_ports; i++) {
@@ -266,8 +268,6 @@ void recalculate_ports(bridge* br) {
             bpdu adjusted_received = *(pt->best_received);
             adjusted_received.cost += pt->port->poids;
 
-
-
             if (is_bpdu_better(&adjusted_received, &simulated)) {
                 if (pt->type != NONDESIGNE) {
                     pt->type = NONDESIGNE;
@@ -290,7 +290,9 @@ void recalculate_ports(bridge* br) {
     }
 }
 
+
 void send_bdpu(bridge* br) {
+    // Procédure qui gère l'envoie d'un bpdu par tous les ports valides du switch.
     if (!br || !br->ports || !br->bpdu) return;
 
     for (size_t i = 0; i < br->nb_ports; i++) {

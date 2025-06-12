@@ -4,7 +4,8 @@
                                                                                 
                                                                                 
                                                                                 
-void init_graphe(graphe *g, int nbSommet) {                                       
+void init_graphe(graphe *g, int nbSommet) {
+    // Procédure qui initialise le graphe.                                  
     g->matrice = (poids**)malloc(nbSommet * sizeof(poids*));                  
     g->sommets = (sommet**)malloc(nbSommet * sizeof(sommet*));                    
     g->ordre = nbSommet;           
@@ -26,13 +27,15 @@ void init_graphe(graphe *g, int nbSommet) {
     }                                                                           
 }     
 
-void init_sommet(sommet *s , int index,machine * machine){
+void init_sommet(sommet *s , int index, machine * machine){
+    // Procédure qui initialise un sommet.
     s->index = index;
     s->machine = machine;
 }
 
 
 void add_sommet(graphe* g,sommet* sommet,int index){
+    // Procédure qui ajoute un sommet au graphe.
     g->sommets[index] = sommet;
 }
 
@@ -40,7 +43,7 @@ void add_sommet(graphe* g,sommet* sommet,int index){
               
                                                                                 
 void desinit_graphe(graphe *g){                                     
-                                                                                
+    // Procédure qui libère la mémoire allouée par le graphe.                                              
     for (int i = 0; i < g->ordre; i++) {                                        
         free(g->matrice[i]);                                                  
         g->matrice[i] =NULL; 
@@ -60,42 +63,10 @@ void desinit_graphe(graphe *g){
        
 
 void desinit_sommet(sommet *s){
+    // Procédure qui libère la mémoire allouée par le sommet.
     s->index =-1;
     desinit_machine(s->machine);
     free(s->machine);
     s->machine = NULL;
 }
-                                                                                                                                                            
-                                                                                
-void add_vertex(graphe *g, sommet a, sommet b, int poids){                                   
-    g->matrice[a.index][b.index] = poids ;                                       
-}                                                                          
-                                                                                
-                                                                  
-                                                                                
-                                                                                
-char* to_string_graphe(const graphe* g, char* buffer) {
-    if (!g || !buffer) return NULL;
-    int pos = 0;
-    buffer[0] = '\0';
-    for (int i = 0; i < g->ordre; ++i) {
-        pos += sprintf(buffer + pos, "  %c", 'A' + i);
-    }
-    for (int i = 0; i < g->ordre; ++i) {
-        pos += sprintf(buffer + pos, "\n%c", 'A' + i); 
-        for (int j = 0; j < g->ordre; ++j) {
-            pos += sprintf(buffer + pos, "  %ld", g->matrice[i][j]); 
-        }
-    }
-    buffer[pos] = '\n';
-    return buffer;
-}
-
-char* to_string_sommet(const sommet* sommet,char* buffer);                                   
-                                                                                
-void afficher_matrice(const graphe* g){
-    char buffer[1024];
-    printf("\n%s\n", to_string_graphe(g, buffer));
-}
-
-void afficher_sommet();                                                         
+                                                                                                                                                                                                                

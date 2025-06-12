@@ -3,7 +3,6 @@
 #include <stdbool.h>
 
 
-//typedef uint8_t mac[6];
 typedef uint64_t mac;
 bool mac_equals(mac mac1, mac mac2);
 bool is_mac_inferior_to(mac mac1, mac mac2);

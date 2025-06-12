@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 void init_machine(machine* machine, void* machine_pointer, type type, mac addr) {
+    // Procédure qui initialise une machine.
     machine->machine = machine_pointer;
     machine->type = type;
     machine->addr_mac = addr;
@@ -31,6 +32,7 @@ void init_machine(machine* machine, void* machine_pointer, type type, mac addr) 
 }
 
 void desinit_machine(machine* machine) {
+    // Procédure qui libère la mémoire allouée par une machine.
     char macprintbuffer[1024];
     printf(" desinit de : %s\n", to_string_mac(&machine->addr_mac, macprintbuffer));
 
@@ -50,6 +52,7 @@ void desinit_machine(machine* machine) {
 }
 
 void send_trame(machine* sender, trame *tr, interface* input_port) {
+    // Procédure qui gère l'envoie d'une trame.
     if (sender->type == STATION) {
         trame reply;
         copy_trame(&reply, tr); 
@@ -63,11 +66,8 @@ void send_trame(machine* sender, trame *tr, interface* input_port) {
 
 }
 
-bool is_it_for_me_question_mark(machine *mach, trame* t) {
-    return mac_equals(mach->addr_mac, t->dest);
-}
-
 void receive_trame(machine* receiver, trame* tr, interface* input_port) {
+    // Procédure qui gère la réception d'une trame.
     char mac_buffer_self[20]; 
     char mac_buffer_src[20];
     char mac_buffer_dest[20];
@@ -109,7 +109,13 @@ void receive_trame(machine* receiver, trame* tr, interface* input_port) {
 
 }
 
+bool is_it_for_me_question_mark(machine *mach, trame* t) {
+    // Fonction qui retourne vrai si la destination de la trame est la machine, retourne faux sinon.
+    return mac_equals(mach->addr_mac, t->dest);
+}
+
 void connect_two_machine(machine* machine1, machine* machine2, size_t poids) {
+    // Procédure qui connecte 2 machines en liant leurs interfaces.
     interface *intf1 = NULL, *intf2 = NULL;
     assign_interface(&machine1, &intf1);
     assign_interface(&machine2, &intf2);
@@ -122,6 +128,7 @@ void connect_two_machine(machine* machine1, machine* machine2, size_t poids) {
 }
 
 void assign_interface(machine** machine, interface** interface) {
+    // Procédure qui assigne une interface à la machine.
     if ((*machine)->type == SWITCH) {
         bridge* br = (bridge*)(*machine)->machine;
         *interface = bridge_get_free_interface(br, *machine);
