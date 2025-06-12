@@ -170,11 +170,6 @@ int retrieve_port(bridge* bd, interface* inter) {
 }
 
 
-
-
-
-
-
 void process_trame(bridge *br, trame* tr, interface* input_port) {
     int input_index = retrieve_port(br, input_port);
     if (input_index == -1) return;
@@ -223,10 +218,9 @@ void process_trame(bridge *br, trame* tr, interface* input_port) {
             br->root_index = input_index;
         }
         if (pt->best_received) {
-            if (is_bpdu_better(received, pt->best_received)) {
                 desinit_bpdu(pt->best_received);
                 copy_bpdu(received, pt->best_received);
-            }
+      
         } else {
             pt->best_received = malloc(sizeof(bpdu));
             copy_bpdu(received, pt->best_received);
